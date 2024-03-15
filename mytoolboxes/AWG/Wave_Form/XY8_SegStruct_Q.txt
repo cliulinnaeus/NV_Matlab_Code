@@ -1,0 +1,2 @@
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\XY8_Q_seg1.txt 2704 1 1
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\XY8_Q_seg2.txt 2704 1 1

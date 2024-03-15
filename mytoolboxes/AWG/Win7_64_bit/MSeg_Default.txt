@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <grid version="3">
+    <saveoptions create="True" position="True" content="True"/>
+    <design columncount="6" rowcount="15" fixedcols="0" fixedrows="1" defaultcolwidth="64" isdefaultrowheight="0" defaultrowheight="22" color="clWindow">
+      <columns columnsenabled="True" columncount="6">
+        <column0>
+          <index value="0"/>
+          <width value="40"/>
+          <buttonstyle value="0"/>
+          <font>
+            <name value="Arial"/>
+            <size value="10"/>
+            <color value="clBlack"/>
+            <style value="3"/>
+          </font>
+          <title>
+            <caption value="Seg"/>
+          </title>
+        </column0>
+        <column1>
+          <index value="1"/>
+          <width value="35"/>
+          <buttonstyle value="0"/>
+          <font>
+            <name value="Arial"/>
+            <size value="10"/>
+            <color value="clBlack"/>
+            <style value="3"/>
+          </font>
+          <title>
+            <caption value="Ch"/>
+          </title>
+        </column1>
+        <column2>
+          <index value="2"/>
+          <width value="58"/>
+          <buttonstyle value="0"/>
+          <title>
+            <caption value="Enable"/>
+          </title>
+        </column2>
+        <column3>
+          <index value="3"/>
+          <width value="400"/>
+          <buttonstyle value="0"/>
+          <title>
+            <caption value="Waveform File   (example: C:\temp\wfm1.txt)"/>
+          </title>
+        </column3>
+        <column4>
+          <index value="4"/>
+          <width value="56"/>
+          <buttonstyle value="0"/>
+          <title>
+            <caption value="Trig?"/>
+          </title>
+        </column4>
+        <column5>
+          <index value="5"/>
+          <width value="110"/>
+          <buttonstyle value="0"/>
+          <title>
+            <caption value="Loop Cnt (0=inf)"/>
+          </title>
+        </column5>
+      </columns>
+      <options>
+        <goFixedVertLine value="True"/>
+        <goFixedHorzLine value="True"/>
+        <goVertLine value="True"/>
+        <goHorzLine value="True"/>
+        <goRangeSelect value="True"/>
+        <goDrawFocusSelected value="False"/>
+        <goRowSizing value="False"/>
+        <goColSizing value="True"/>
+        <goRowMoving value="False"/>
+        <goColMoving value="False"/>
+        <goEditing value="True"/>
+        <goAutoAddRows value="False"/>
+        <goTabs value="False"/>
+        <goRowSelect value="False"/>
+        <goAlwaysShowEditor value="False"/>
+        <goThumbTracking value="False"/>
+        <goColSpanning value="False"/>
+        <goRelaxedRowSelect value="False"/>
+        <goDblClickAutoSize value="False"/>
+        <goSmoothScroll value="True"/>
+        <goAutoAddRowsSkipContentCheck value="False"/>
+        <goRowHighlight value="False"/>
+      </options>
+    </design>
+    <position topleftcol="0" topleftrow="1" col="3" row="2">
+      <selection left="3" top="2" right="3" bottom="2"/>
+    </position>
+    <content>
+      <cells cellcount="57">
+        <cell1 column="0" row="0" text="Seg"/>
+        <cell2 column="0" row="1" text="1"/>
+        <cell3 column="0" row="2" text=" "/>
+        <cell4 column="0" row="3" text="2"/>
+        <cell5 column="0" row="4" text=" "/>
+        <cell6 column="0" row="5" text="3"/>
+        <cell7 column="0" row="6" text=" "/>
+        <cell8 column="0" row="7" text="4"/>
+        <cell9 column="0" row="8" text=" "/>
+        <cell10 column="0" row="9" text="5"/>
+        <cell11 column="0" row="10" text=" "/>
+        <cell12 column="0" row="11" text="6"/>
+        <cell13 column="0" row="12" text=" "/>
+        <cell14 column="0" row="13" text="7"/>
+        <cell15 column="0" row="14" text=" "/>
+        <cell16 column="1" row="1" text="a"/>
+        <cell17 column="1" row="2" text="b"/>
+        <cell18 column="1" row="3" text="a"/>
+        <cell19 column="1" row="4" text="b"/>
+        <cell20 column="1" row="5" text="a"/>
+        <cell21 column="1" row="6" text="b"/>
+        <cell22 column="1" row="7" text="a"/>
+        <cell23 column="1" row="8" text="b"/>
+        <cell24 column="1" row="9" text="a"/>
+        <cell25 column="1" row="10" text="b"/>
+        <cell26 column="1" row="11" text="a"/>
+        <cell27 column="1" row="12" text="b"/>
+        <cell28 column="1" row="13" text="a"/>
+        <cell29 column="1" row="14" text="b"/>
+        <cell30 column="2" row="1" text="x"/>
+        <cell31 column="2" row="2" text="x"/>
+        <cell32 column="2" row="3" text="x"/>
+        <cell33 column="2" row="4" text="x"/>
+        <cell34 column="2" row="5" text="x"/>
+        <cell35 column="2" row="6" text="x"/>
+        <cell36 column="3" row="1" text="C:\MATLAB_Code\mytoolboxes\AWG\Win7_64_bit\waveforms_examples\0-sweep.txt"/>
+        <cell37 column="3" row="2" text="C:\MATLAB_Code\mytoolboxes\AWG\Win7_64_bit\waveforms_examples\0-sweep.txt"/>
+        <cell38 column="3" row="3" text="C:\MATLAB_Code\mytoolboxes\AWG\Win7_64_bit\Seg_1.txt"/>
+        <cell39 column="3" row="4" text="C:\MATLAB_Code\mytoolboxes\AWG\Win7_64_bit\Seg_1.txt"/>
+        <cell40 column="3" row="5" text="C:\MATLAB_Code\mytoolboxes\AWG\Win7_64_bit\waveforms_examples\0-sweep.txt"/>
+        <cell41 column="3" row="6" text="C:\MATLAB_Code\mytoolboxes\AWG\Win7_64_bit\waveforms_examples\0-sweep.txt"/>
+        <cell42 column="4" row="1" text="-"/>
+        <cell43 column="4" row="2" text="-"/>
+        <cell44 column="5" row="1" text="1"/>
+        <cell45 column="5" row="2" text="1"/>
+        <cell46 column="5" row="3" text="1"/>
+        <cell47 column="5" row="4" text="1"/>
+        <cell48 column="5" row="5" text="1"/>
+        <cell49 column="5" row="6" text="1"/>
+        <cell50 column="5" row="7" text="1"/>
+        <cell51 column="5" row="8" text="1"/>
+        <cell52 column="5" row="9" text="1"/>
+        <cell53 column="5" row="10" text="1"/>
+        <cell54 column="5" row="11" text="1"/>
+        <cell55 column="5" row="12" text="1"/>
+        <cell56 column="5" row="13" text="1"/>
+        <cell57 column="5" row="14" text="1"/>
+      </cells>
+    </content>
+  </grid>
+</CONFIG>

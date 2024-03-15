@@ -1,0 +1,6 @@
+function [status] = DAQmxWriteDigitalLines(taskHandle, numSampsPerChan,...
+    bAutoStart, timeout, bDataLayout, writeArray, sampsPerChanWritten);
+
+
+[status] = calllib('mynidaqmx','DAQmxWriteDigitalLines',taskHandle, numSampsPerChan,...
+    bAutoStart, timeout, bDataLayout, writeArray, sampsPerChanWritten,[]);

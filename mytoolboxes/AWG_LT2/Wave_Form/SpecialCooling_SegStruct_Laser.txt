@@ -1,0 +1,2 @@
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\SpecialCooling_LaserPulse1.txt 4016 1 1
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\SpecialCooling_LaserPulse2.txt 43008 1 1

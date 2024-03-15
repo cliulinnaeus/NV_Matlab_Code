@@ -1,0 +1,2 @@
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\DEER_ODMR_Q_seg1.txt 42176 1 1
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\DEER_ODMR_Q_seg2.txt 42336 1 1

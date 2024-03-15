@@ -1,0 +1,4 @@
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\SpecialCooling_Q_seg4.txt 62032 1 1
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\SpecialCooling_Q_seg2.txt 2160 1 1
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\SpecialCooling_Q_seg4.txt 62032 1 1
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\SpecialCooling_Q_seg3.txt 782160 1 1

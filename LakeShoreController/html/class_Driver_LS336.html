@@ -1,0 +1,1267 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>class_Driver_LS336</title><meta name="generator" content="MATLAB 9.9"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-03-04"><meta name="DC.source" content="class_Driver_LS336.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">MATLAB Driver for Lake Shore 336 Heater Controller</a></li><li><a href="#3"><b>PROPERTIES</b></a></li><li><a href="#4">Constant properties</a></li><li><a href="#9">Public Accessible Properties</a></li><li><a href="#15"><b>METHODS</b></a></li><li><a href="#16"><b>Fundamental Functions</b></a></li><li><a href="#17">Class Constructor &amp; Initialization Function</a></li><li><a href="#20">Class Destructor</a></li><li><a href="#21">Error Codes Display</a></li><li><a href="#26">Serial Port - Creation</a></li><li><a href="#30">Serial Port - Termination</a></li><li><a href="#31">Serial Port - Recreation</a></li><li><a href="#32">Serial Port - Send Command</a></li><li><a href="#34">Serial Port - Query</a></li><li><a href="#35"><b>Higher-level Functions</b></a></li><li><a href="#36">Get the Serial Number of the Heater Controller</a></li><li><a href="#40">Obtain Current Heater Configuration</a></li><li><a href="#42">Set Heater Configuration</a></li><li><a href="#46">Set Target Heater Level</a></li><li><a href="#48">Get Current Heater Levels</a></li><li><a href="#49">Get Current Heater Percentages</a></li><li><a href="#50">Turn ON/OFF the Heaters</a></li><li><a href="#52">Set Maximum User Current Output of the Heaters</a></li><li><a href="#54">Get Current Temperature Sensor Configuration</a></li><li><a href="#56">Set Temperature Sensor Configuration</a></li><li><a href="#57">Get Current Target Temperature Level</a></li><li><a href="#58">Set Target Temperature Level</a></li><li><a href="#59">Get Current Temperature Readings</a></li><li><a href="#62">Update All Class Properties</a></li></ul></div><h2 id="1">MATLAB Driver for Lake Shore 336 Heater Controller</h2><p>Provide a class that includes all the basic controls and error handling of Lake Shore 336 heater controller using serial / USB connection, for intance: create and terminate connection, set heater level, get temperature readings.</p><div><ul><li>This script is developed and tested by <b>Yuanqi Lyu</b> (<a href="mailto:yuanqilyu@berkeley.edu">yuanqilyu@berkeley.edu</a>) at <b>University of California, Berkeley</b>. All rights reserved.</li><li>This script is tested to be compatiable with <b>MATLAB 2020b</b> in Feb 2021.</li><li>The manual of the heater controller can be downloaded from <a href="https://www.lakeshore.com/docs/default-source/product-downloads/336_manual.pdf">Lake Shore</a> support website.</li><li><b>Standard disclaimer</b>: there is no spelling check function for the comments.</li><li>This script and its corresponding project is available on <a href="https://github.com/Yuanqi137/LakeShoreController">GitHub</a>.</li></ul></div><pre class="codeinput"><span class="keyword">classdef</span> class_Driver_LS336 &lt; handle
+</pre><p>This is a MATLAB handle class (<a href="https://www.mathworks.com/help/matlab/handle-classes.html">ref</a>), which provide real time value change in class method functions.</p><h2 id="3"><b>PROPERTIES</b></h2><p>Properties, values and settings of the heater controller.</p><h2 id="4">Constant properties</h2><pre class="codeinput">    properties (Constant)
+</pre><p>Do <b>NOT</b> manually edit.</p><pre class="codeinput">        SerialPort_BaudRate = 57600;
+        SerialPort_Conf = struct(<span class="keyword">...</span>
+            <span class="string">'DataBits'</span>, 7, <span class="keyword">...</span>
+            <span class="string">'StopBits'</span>, 1, <span class="keyword">...</span>
+            <span class="string">'Parity'</span>, <span class="string">'odd'</span>, <span class="keyword">...</span>
+            <span class="string">'FlowControl'</span>, <span class="string">'none'</span>, <span class="keyword">...</span>
+            <span class="string">'Timeout'</span>, 5);
+</pre><p><b>SerialPort_BaudRate</b> (<i>double</i> - constant): This is the required baud rate for Lake Shore 336 (ref: <i>Manual</i> section 6.3.2 [p. 104], same for SerialPort_Conf).</p><p><b>SerialPort_Conf</b> (<i>struct</i> - constant): This struct contains all parameter of the serial port connection required by Lake Shore 336.</p><p>Adjust by needs.</p><pre class="codeinput">        Time_Wait = 0.1
+</pre><p><b>Time_Wait</b> (<i>double</i> - constant): Number of second to wait so that the last operation is complete, use between consecutive send_Command() and / or send_Query().</p><pre class="codeinput">    <span class="keyword">end</span>
+</pre><h2 id="9">Public Accessible Properties</h2><pre class="codeinput">    properties (Access = public)
+        ErrCode = zeros(1, 20);
+</pre><p><b>ErrCode</b> (<i>double (matrix)</i>): Error code generated when executing the class methods, here:</p><div><ul><li>1 or -1 stands for serial connection error or instability, generally the connection will be recreated afterwards.</li><li>2 or -2 stands for communication error, where the intended parameter for the heater is not set correctly.</li><li>3 or -3 stands for the number of heater / temperature sensor addressed in a command is longer than that of the connected.</li></ul></div><p>The last 20 result of error codes is stored.</p><pre class="codeinput">        N_Heater = 1;
+        N_TempSensor = 1;
+</pre><p><b>N_Heater</b> and <b>N_TempSenor</b> (<i>double</i>): Number of heaters and temperature sensors connected to the heater controller. Lake Shore 336 allows maximum of 2 heaters and 4 temperature sensor inputs. For sake of simplicity, please connect the heaters and temperature sensors from lower number slots to higher number slots (1 to 2, A to D).</p><pre class="codeinput">        SerialNumber
+        SerialPort
+        SerialPort_Name
+</pre><p><b>SerialPort</b> (<i>serial port object</i>): The serial connection between the computer and the heater controller. This property is created when the class in contructed. Deletion of this property will terminate the serial connection, which happens automatically when a class instance is deleted.</p><p><b>SerialPort_Name</b> (<i>string</i>): Name of the serial port, e.g. "COM5".</p><pre class="codeinput">        Heater_Percentage
+        Heater_Level = 0;
+        Heater_Level_Targ = 0;
+        Heater_Conf = struct( <span class="keyword">...</span>
+            <span class="string">'Connected'</span>, 1, <span class="keyword">...</span>
+            <span class="string">'Resistance'</span>, 2, <span class="keyword">...</span>
+            <span class="string">'MaxCurrent'</span>, 0, <span class="keyword">...</span>
+            <span class="string">'MaxUserCurrent'</span>, 0.000, <span class="keyword">...</span>
+            <span class="string">'Display'</span>, 1);
+</pre><p><b>Heater_Level</b> (<i>double (matrix)</i>): Current levels of heaters: 0 = Off, 1 = Low, 2 = Medium, 3 = High.</p><p><b>Heater_Level_Targ</b> (<i>double (matrix)</i>): Target levels of heaters after they were turned on: 1 = Low, 2 = Medium, 3 = High.</p><p><b>Heater_Conf</b> (<i>struct</i>): This is the configuration for the heaters connected to the controller (ref: <i>Manual</i> section 6.6.1 [p. 132]). Here are details of each field:</p><div><ul><li><i>Connected</i>: Connected heater: 1, 2 or [1, 2].</li><li><i>Resistance</i>: Heater resistence: 1 = 25 Ohm, 2 = 50 Ohm. If both heaters are connected, then use a 1-by-2 matrix, e.g. [0, 0] (same for the rest of the fields).</li><li><i>MaxCurrent</i>: Maximum heater output current: 0 = User Specified, 1 = 0.707 A, 2 = 1 A, 3 = 1.141 A, 4 = 1.732 A.</li><li><i>MaxUserCurrent</i>: Maximum heater output current specified by user if <i>MaxCurrent</i> is set to be zero. (<i>three decimal points signed</i>)</li><li><i>Display</i>: Specifies whether the heater output displays in current or power (current mode only): 1 = Current, 2 = Power.</li></ul></div><pre class="codeinput">        Temp
+        Temp_Targ
+        TempSensor_Conf = struct( <span class="keyword">...</span>
+            <span class="string">'Connected'</span>, <span class="string">'A'</span>, <span class="keyword">...</span>
+            <span class="string">'Type'</span>, 2, <span class="keyword">...</span>
+            <span class="string">'AutoRange'</span>, 0, <span class="keyword">...</span>
+            <span class="string">'Range'</span>, 0, <span class="keyword">...</span>
+            <span class="string">'Compensation'</span>, 0, <span class="keyword">...</span>
+            <span class="string">'Units'</span>, 1);
+</pre><p><b>Temp</b> (<i>double (matrix)</i>): Current temperature readout by the sensors (A, B, C, D or conbinations determined by connected sensors). Its unit should be in K, unless specified otherwise by TempSensor_Conf.Units.</p><p><b>Temp_Targ</b> (<i>double (matrix)</i>): Target temperature to be achieved by heaters (1, 2 or both).Its unit should be in K, or specified by TempSensor_Conf.Units.</p><p><b>TempSensor_Conf</b> (<i>struct</i>): This is the configuration for the temperature sensors connected to the controller (ref: <i>Manual</i> section 6.6.1 [p. 135]). Here are details of each field:</p><div><ul><li><i>Connected</i> (<i>char (array)</i>): Connected temperature sensor: 'A', 'B', 'C', 'D' or combinations like 'AB', 'AC', 'ABCD'.</li><li><i>Type</i>: input sensor type: 0 = Disabled, 1 = Diode, 2 = Platinum RTD, 3 = NTC RTD, 4 = Thermocouple. If both temperature sensors are connected, then use a 1-by-2 matrix, e.g. [2, 2] (same for the rest of the fields).</li><li><i>AutoRange</i>: Autorange: 0 = Off, 1 = On.</li><li><i>Range</i>: Specifies input range when autorange is off. See table 6-8 (<i>Manual</i> [p. 135]).</li><li><i>Compensation</i>: Input compensation: 0 = Off, 1 = On.</li><li><i>Units</i>: Unit for sensor readings <b>AND</b> control setpoint: 1 = Kelvin, 2 = Celsius, 3 = Sensor.</li></ul></div><pre class="codeinput">    <span class="keyword">end</span>
+</pre><h2 id="15"><b>METHODS</b></h2><pre class="codeinput">    methods
+</pre><h2 id="16"><b>Fundamental Functions</b></h2><p>Essential functions that enable communication between the computer and heater controller with basic error handling.</p><h2 id="17">Class Constructor &amp; Initialization Function</h2><p>Create an class instance and initialize the connection to the heater controller.</p><p><b>Inputs</b></p><div><ul><li>In_SerialPort_Name (<i>string</i>): Name of the serial port, e.g. "COM5".</li><li>In_N_Heater (<i>double</i>): Number of heaters connected to the controller, must be 1 or 2.</li><li>In_N_TempSensor (<i>double</i>): Number of temperature sensors connected, but be integer between 1 and 4.</li><li>vargin (<i>optional inputs</i>): If provided, it must be in the shape of name-valued pair: "HeaterConf", Heater_Conf (<i>struct</i> that matches <b>all</b> the field listed in class property Heater_Conf), "TempSensorConf", TempSensor_Conf (<i>struct</i> that matches <b>all</b> the field listed in class property TempSensor_Conf).</li></ul></div><pre class="codeinput">        <span class="keyword">function</span> [obj, Out_ErrCode] = class_Driver_LS336( <span class="keyword">...</span>
+                In_SerialPort_Name, In_N_Heater, In_N_TempSensor, varargin)
+            obj.SerialPort_Name = In_SerialPort_Name;
+            obj.create_SerialPort();
+
+            obj.N_Heater = In_N_Heater;
+            obj.N_TempSensor = In_N_TempSensor;
+
+            <span class="keyword">if</span> ~isempty(varargin)
+                In_Conf = struct(varargin{:});
+                <span class="keyword">if</span> isfield(In_Conf, <span class="string">'HeaterConf'</span>)
+                     obj.set_HeaterConf(In_Conf.HeaterConf);
+                <span class="keyword">end</span>
+                <span class="keyword">if</span> isfield(In_Conf, <span class="string">'TempSensorConf'</span>)
+                    obj.set_TempSensorConf(In_Conf.TempSensorConf);
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+</pre><p>If specified in the input, update heater and temperature sensor configurations.</p><pre class="codeinput">            obj.update_AllProperties();
+</pre><p>Update all the class properties.</p><pre class="codeinput">            Out_ErrCode = obj.ErrCode(end);
+        <span class="keyword">end</span>
+</pre><h2 id="20">Class Destructor</h2><p>This function is excuted before the instance of the class is destroyed.</p><pre class="codeinput">        <span class="keyword">function</span> delete(obj)
+            <span class="keyword">if</span> ~isempty(obj.SerialPort)
+                obj.terminate_SerialPort();
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+</pre><h2 id="21">Error Codes Display</h2><p>This function is used to display user friendly information based on the error code encountered during excutions of the class methods. It is applied liberally in all other methods.</p><pre class="codeinput">        <span class="keyword">function</span> error_Handling(obj)
+            msgboxStyle.Interpreter = <span class="string">'tex'</span>;
+            msgboxStyle.WindowStyle = <span class="string">'modal'</span>;
+            <span class="keyword">if</span> any(obj.ErrCode == 1)
+</pre><p>Serial communication instability.</p><pre class="codeinput">                msgbox({[<span class="string">'\fontsize{10}{\bfUnable to establish stable '</span> <span class="keyword">...</span>
+                    <span class="string">'serial connection!}'</span>], <span class="keyword">...</span>
+                    [<span class="string">'The serial port requested may be currently in '</span> <span class="keyword">...</span>
+                    <span class="string">'use by other programs!'</span>], <span class="keyword">...</span>
+                    <span class="string">'Check WARNING!'</span>}, <span class="keyword">...</span>
+                    <span class="string">'ERROR - Lake Shore 336'</span>, <span class="string">'error'</span>, msgboxStyle);
+                obj.ErrCode(obj.ErrCode == 1) = - 1;
+            <span class="keyword">elseif</span> any(obj.ErrCode == 2)
+</pre><p>Target settings are different from current settings.</p><pre class="codeinput">                msgbox({[<span class="string">'\fontsize{10}{\bfUnable to complete '</span> <span class="keyword">...</span>
+                    <span class="string">'required setting!}'</span>], <span class="keyword">...</span>
+                    [<span class="string">'Current parameters of the heater may not be '</span> <span class="keyword">...</span>
+                    <span class="string">'desired values!'</span>], <span class="keyword">...</span>
+                    <span class="string">'Check WARNING!'</span>}, <span class="keyword">...</span>
+                    <span class="string">'ERROR - Lake Shore 336'</span>, <span class="string">'warn'</span>, msgboxStyle);
+                obj.ErrCode(obj.ErrCode == 2) = - 2;
+             <span class="keyword">elseif</span> any(obj.ErrCode == 3)
+</pre><p>Number of heater / sensor in command is larger than that of connected.</p><pre class="codeinput">                msgbox({[<span class="string">'\fontsize{10}{\bfToo many heater / '</span>, <span class="keyword">...</span>
+                    <span class="string">'temperature sensor in command!}'</span>], <span class="keyword">...</span>
+                    sprintf([<span class="string">'There is / are %.0f heater(s) and %.0f '</span>, <span class="keyword">...</span>
+                    <span class="string">'temperature sensor(s) connected!'</span>], <span class="keyword">...</span>
+                    obj.N_Heater, obj.N_TempSensor)}, <span class="keyword">...</span>
+                    <span class="string">'ERROR - Lake Shore 336'</span>, <span class="string">'warn'</span>, msgboxStyle);
+                obj.ErrCode(obj.ErrCode == 2) = - 3;
+            <span class="keyword">end</span>
+            <span class="keyword">if</span> sum(obj.ErrCode ~= 0) &gt; 3
+</pre><p>Too many errors.</p><pre class="codeinput">                msgbox({[<span class="string">'\fontsize{10}{\bfToo many errors! '</span>, <span class="keyword">...</span>
+                    <span class="string">'Program halted!}'</span>], <span class="keyword">...</span>
+                    <span class="string">'Check WARNING!'</span>}, <span class="keyword">...</span>
+                    <span class="string">'ERROR - Lake Shore 336'</span>, <span class="string">'error'</span>, msgboxStyle);
+                <span class="keyword">return</span>
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+</pre><h2 id="26">Serial Port - Creation</h2><p>This function creates the serial port needed for connection based on class properties SerialPort_Name, SerialPort_BaudRate and SerialPort_Conf.</p><pre class="codeinput">        <span class="keyword">function</span> [Out_ErrCode, Out_SerialPort] = create_SerialPort(obj)
+            serialPort_Conf_Cell = namedargs2cell(obj.SerialPort_Conf);
+</pre><p>Here we convert obj.SerialPort_Conf to cell so that it can be passed as name-value pairs in the serialport() function.</p><pre class="codeinput">            <span class="keyword">try</span>
+                Out_SerialPort = serialport(<span class="keyword">...</span>
+                    obj.SerialPort_Name, <span class="keyword">...</span>
+                    obj.SerialPort_BaudRate, <span class="keyword">...</span>
+                    serialPort_Conf_Cell{:});
+</pre><p>The serialport() function (<a href="https://www.mathworks.com/help/matlab/ref/serialport.html">ref</a>) and related object / object function are the new protocal MATLAB&reg; try to push for serial connection after version 2019b.</p><pre class="codeinput">                Out_ErrCode = 0;
+            <span class="keyword">catch</span> errMsg
+                Out_SerialPort = [];
+                Out_ErrCode = 1;
+                warning(errMsg.message)
+            <span class="keyword">end</span>
+            obj.SerialPort = Out_SerialPort;
+            obj.ErrCode = circshift(obj.ErrCode, - 1);
+            obj.ErrCode(end) = Out_ErrCode;
+</pre><p>Circular shift the array of error codes so that there are always 20 of them stored.</p><pre class="codeinput">            obj.error_Handling();
+        <span class="keyword">end</span>
+</pre><h2 id="30">Serial Port - Termination</h2><p>This fucntion terminates the serial connection by deleting the serial port object created as class property.</p><pre class="codeinput">        <span class="keyword">function</span> Out_ErrCode = terminate_SerialPort(obj)
+            delete(obj.SerialPort);
+            obj.ErrCode = circshift(obj.ErrCode, - 1);
+            obj.ErrCode(end) = 0;
+            Out_ErrCode = obj.ErrCode(end);
+        <span class="keyword">end</span>
+</pre><h2 id="31">Serial Port - Recreation</h2><p>This function is to improve the robustness of the driver. Generally, if an error happens during some operation, we use this function to recreate the serial port and try again.</p><pre class="codeinput">        <span class="keyword">function</span> [Out_ErrCode, Out_SerialPort] = recreate_SerialPort(obj)
+            obj.terminate_SerialPort();
+            [Out_ErrCode, Out_SerialPort] = obj.create_SerialPort();
+        <span class="keyword">end</span>
+</pre><h2 id="32">Serial Port - Send Command</h2><p>This function sends command via the serial port using the .writeline() object function of serialport.</p><pre class="codeinput">        <span class="keyword">function</span> Out_ErrCode = send_Command(obj, In_Command)
+            <span class="keyword">try</span>
+                obj.SerialPort.writeline(In_Command);
+                obj.ErrCode = circshift(obj.ErrCode, - 1);
+                obj.ErrCode(end) = 0;
+            <span class="keyword">catch</span> errMsg
+</pre><p>Recreate the serial port if encountered any connection issue while writing data and set the error code to 1.</p><pre class="codeinput">                obj.ErrCode = circshift(obj.ErrCode, - 1);
+                obj.ErrCode(end) = 1;
+                obj.recreate_SerialPort();
+                obj.SerialPort.writeline(In_Command);
+                warning(errMsg.message)
+            <span class="keyword">end</span>
+            Out_ErrCode = obj.ErrCode(end);
+            obj.error_Handling();
+        <span class="keyword">end</span>
+</pre><h2 id="34">Serial Port - Query</h2><p>This function sends command via the serial port using the .writeline() and .readline() object functions of serialport.</p><pre class="codeinput">        <span class="keyword">function</span> [Out_ErrCode, Out_Response] = send_Query(obj, In_Query)
+            <span class="keyword">try</span>
+                obj.SerialPort.writeline(In_Query);
+                Out_Response = obj.SerialPort.readline();
+                obj.ErrCode = circshift(obj.ErrCode, - 1);
+                obj.ErrCode(end) = 0;
+            <span class="keyword">catch</span> errMsg
+                obj.ErrCode = circshift(obj.ErrCode, - 1);
+                obj.ErrCode(end) = 1;
+                obj.recreate_SerialPort();
+                obj.SerialPort.writeline(In_Query);
+                Out_Response = obj.SerialPort.readline();
+                warning(errMsg.message)
+            <span class="keyword">end</span>
+            Out_ErrCode = obj.ErrCode(end);
+            obj.error_Handling();
+            pause(obj.Time_Wait)
+        <span class="keyword">end</span>
+</pre><h2 id="35"><b>Higher-level Functions</b></h2><p>The functions that acutually change the settings and acquire the data from the heater controller. The reference of the serial commands used in the functions bellow can be found in the manual (ref: <i>Manual</i> section 6.6 [p. 124]).</p><h2 id="36">Get the Serial Number of the Heater Controller</h2><pre class="codeinput">        <span class="keyword">function</span> [Out_ErrCode, Out_SerialNumber] = get_SerialNumber(obj)
+            [~, response] = obj.send_Query(<span class="string">"*IDN?"</span>);
+            Out_SerialNumber = extractBetween(response, 15, 21);
+</pre><p>Get part of the return that is the serial number (ref: <i>Manual</i> [p.125]).</p><pre class="codeinput">            obj.ErrCode = circshift(obj.ErrCode, - 1);
+            obj.ErrCode(end) = 2 * isempty(Out_SerialNumber);
+</pre><p>obj.ErrCode = 2 if somehow the serail number obtained is empty, else it is 0.</p><pre class="codeinput">            obj.SerialNumber = Out_SerialNumber;
+</pre><p>Update the relavent class property.</p><pre class="codeinput">            Out_ErrCode = obj.ErrCode(end);
+            obj.error_Handling();
+        <span class="keyword">end</span>
+</pre><h2 id="40">Obtain Current Heater Configuration</h2><p>This function queries <b>both</b> heaters' configurations from the controller, and stores them in class property Heater_Conf (near line 75-ish, ref: <i>Manual</i> section 6.6.1 [p. 134]).</p><pre class="codeinput">        <span class="keyword">function</span> [Out_ErrCode, Out_Heater_Conf] = get_HeaterConf(obj)
+            <span class="keyword">for</span> n = 1 : obj.N_Heater
+                [~, response] = obj.send_Query( <span class="keyword">...</span>
+                    sprintf(<span class="string">"HTRSET?%.0f"</span>, n));
+                Out_Heater_Conf.Connected(n) = n;
+                response = str2num(response); <span class="comment">%#ok&lt;*ST2NM&gt;</span>
+</pre><p>Ignore the stupid warning about str2num() here! The same applies for the rest of the code. The "%#ok&lt;*ST2NM&gt;" is to supress this warning.</p><pre class="codeinput">                Out_Heater_Conf.Resistance(n) = response(1);
+                Out_Heater_Conf.MaxCurrent(n) = response(2);
+                Out_Heater_Conf.MaxUserCurrent(n) = response(3);
+                Out_Heater_Conf.Display(n) = response(4);
+            <span class="keyword">end</span>
+            Out_ErrCode = obj.ErrCode(end);
+            obj.Heater_Conf = Out_Heater_Conf;
+            obj.error_Handling();
+        <span class="keyword">end</span>
+</pre><h2 id="42">Set Heater Configuration</h2><p>This function set heater configuration from the input.</p><p><b>Input</b></p><div><ul><li>In_Heater_Conf (<i>struct</i> that matches <b>all</b> the fields listed in class property Heater_Conf defined near line 75-ish, ref: <i>Manual</i> section 6.6.1 [p. 136]).</li></ul></div><pre class="codeinput">        <span class="keyword">function</span> Out_ErrCode = set_HeaterConf(obj, <span class="keyword">...</span>
+                In_Heater_Conf)
+            <span class="keyword">for</span> n = 1 : length(In_Heater_Conf.Connected)
+                command = sprintf(<span class="string">"HTRSET%.0f,%.0f,%.0f,+%.3f,%.0f"</span>, <span class="keyword">...</span>
+                    In_Heater_Conf.Connected(n), <span class="keyword">...</span>
+                    In_Heater_Conf.Resistance(n), <span class="keyword">...</span>
+                    In_Heater_Conf.MaxCurrent(n), <span class="keyword">...</span>
+                    In_Heater_Conf.MaxUserCurrent(n), <span class="keyword">...</span>
+                    In_Heater_Conf.Display(n));
+                obj.send_Command(command);
+                pause(obj.Time_Wait)
+</pre><p>Pause a bit so that the setting can be changed on the heater side.</p><pre class="codeinput">                [~, response] = obj.send_Query(sprintf(<span class="string">"HTRSET?%.0f"</span>, n));
+                obj.ErrCode = circshift(obj.ErrCode, - 1);
+                obj.ErrCode(end) = 2 * ~isequal( <span class="keyword">...</span>
+                    str2num(extractBetween(command, 9, 20)), <span class="keyword">...</span>
+                    str2num(response));
+</pre><p>Compare current setting of the heater with the intended, if the two are not the same, then set the error code to 2.</p><pre class="codeinput">            <span class="keyword">end</span>
+            obj.get_HeaterConf();
+</pre><p>Update the current heater configurations in class properties.</p><pre class="codeinput">            Out_ErrCode = obj.ErrCode(end);
+            obj.error_Handling();
+        <span class="keyword">end</span>
+</pre><h2 id="46">Set Target Heater Level</h2><p>This function set the target heater level, which only become effective <b>after</b> the heater is turned on using obj.set_HeaterONOFF() class function.</p><p><b>Inputs</b></p><div><ul><li>In_Heater_Level_Targ (<i>double (matrix)</i>): Target heater levels, 0 = Off, 1 = Low, 2 = Medium, 3 = High. If only have one value, e.g. 1, then it only applies to heater 1 (low); if there are two values arranged in a 2-by-1 matrix, e.g. [2, 1], then it applies to both heaters (heater 1: medium, heater 2: low).</li></ul></div><pre class="codeinput">        <span class="keyword">function</span> Out_ErrCode = set_HeaterLevelTarg(obj, <span class="keyword">...</span>
+                In_Heater_Level_Targ)
+            <span class="keyword">if</span> length(In_Heater_Level_Targ) &gt; obj.N_Heater
+                obj.ErrCode = circshift(obj.ErrCode, - 1);
+                obj.ErrCode(end) = 3;
+                obj.error_Handling();
+                In_Heater_Level_Targ = In_Heater_Level_Targ( <span class="keyword">...</span>
+                    1 : obj.N_Heater);
+            <span class="keyword">end</span>
+</pre><p>Trim the extra commands when there are more heaters in command than connected.</p><pre class="codeinput">            obj.Heater_Level_Targ = In_Heater_Level_Targ;
+            Out_ErrCode = obj.ErrCode(end);
+        <span class="keyword">end</span>
+</pre><h2 id="48">Get Current Heater Levels</h2><p>This function querys current heater levels on <b>both</b> heater outputs.</p><pre class="codeinput">        <span class="keyword">function</span> [Out_ErrCode, Out_Heater_Level] = get_HeaterLevel(obj)
+            Out_Heater_Level = zeros(1, obj.N_Heater);
+            <span class="keyword">for</span> n = 1 : obj.N_Heater
+                [~, response] = obj.send_Query( <span class="keyword">...</span>
+                    sprintf(<span class="string">'RANGE?%.0f'</span>, n));
+                Out_Heater_Level(n) = str2double(response);
+            <span class="keyword">end</span>
+            obj.Heater_Level = Out_Heater_Level;
+            Out_ErrCode = obj.ErrCode(end);
+        <span class="keyword">end</span>
+</pre><h2 id="49">Get Current Heater Percentages</h2><p>This function querys current heater percentages on <b>both</b> heater outputs.</p><pre class="codeinput">        <span class="keyword">function</span> [Out_ErrCode, Out_Heater_Percentage] <span class="keyword">...</span>
+                = get_HeaterPercentage(obj)
+            Out_Heater_Percentage = zeros(1, obj.N_Heater);
+            <span class="keyword">for</span> n = 1 : obj.N_Heater
+                [~, response] = obj.send_Query( <span class="keyword">...</span>
+                    sprintf(<span class="string">'HTR?%.0f'</span>, n));
+                Out_Heater_Percentage(n) = str2double(response);
+            <span class="keyword">end</span>
+            obj.Heater_Percentage = Out_Heater_Percentage;
+            Out_ErrCode = obj.ErrCode(end);
+        <span class="keyword">end</span>
+</pre><h2 id="50">Turn ON/OFF the Heaters</h2><p>This function turn on/off the heater and set them to the target heater levels defined as class property of Heater_Level.</p><p><b>Inputs</b></p><div><ul><li>In_Heater_ONOFF (<i>double (matrix)</i>): 1 = On, 0 = Off, if the input is a single number, then only heater 1 is turned ON/OFF; else if the input is a 2-by-1 matrix, e.g. [0, 1], both heaters are addressed (here heater 1: OFF, heater 2: ON).</li></ul></div><pre class="codeinput">        <span class="keyword">function</span> [Out_ErrCode, Out_Heater_Level] = set_HeaterONOFF(obj, <span class="keyword">...</span>
+                In_Heater_ONOFF)
+            <span class="keyword">if</span> length(In_Heater_ONOFF) &gt; obj.N_Heater
+                obj.ErrCode = circshift(obj.ErrCode, - 1);
+                obj.ErrCode(end) = 3;
+                obj.error_Handling();
+                In_Heater_ONOFF = In_Heater_ONOFF( <span class="keyword">...</span>
+                    1 : obj.N_Heater);
+            <span class="keyword">end</span>
+            <span class="keyword">for</span> n = 1 : length(In_Heater_ONOFF)
+                obj.send_Command( <span class="keyword">...</span>
+                    sprintf(<span class="string">'RANGE%.0f,%.0f'</span>, <span class="keyword">...</span>
+                    n, In_Heater_ONOFF * obj.Heater_Level_Targ(n)));
+            <span class="keyword">end</span>
+            pause(obj.Time_Wait)
+            [~, Out_Heater_Level] = obj.get_HeaterLevel();
+            Out_Heater_Level <span class="keyword">...</span>
+                = Out_Heater_Level(1 : length(In_Heater_ONOFF));
+            obj.ErrCode = circshift(obj.ErrCode, - 1);
+            obj.ErrCode(end) = 2 * ~isequal(<span class="keyword">...</span>
+                    In_Heater_ONOFF * obj.Heater_Level_Targ( <span class="keyword">...</span>
+                        1 : length(In_Heater_ONOFF)), <span class="keyword">...</span>
+                    Out_Heater_Level);
+</pre><p>Check if the current heater levels set on the heater are the target values. If not then set the error code to 2 and display a warning.</p><pre class="codeinput">            Out_ErrCode = obj.ErrCode(end);
+            obj.error_Handling();
+        <span class="keyword">end</span>
+</pre><h2 id="52">Set Maximum User Current Output of the Heaters</h2><p>This function sets the maximum heater output current. (ref: <i>Manual</i> [p. 133]).</p><p><b>Inputs</b></p><div><ul><li>In_MaxUserCurrent (<i>double (matrix)</i>): If the input is a single number, then only heater 1 is configured, else if the input is a 2-by-1 matrix, e.g. [1.2, 1.3], then both heaters are configured (here heater 1: 1.2 A, heater 2: 1.3 A).</li></ul></div><pre class="codeinput">        <span class="keyword">function</span> Out_ErrCode = set_MaxUserCurrent(obj, In_MaxUserCurrent)
+            obj.get_HeaterConf();
+            <span class="keyword">if</span> length(In_MaxUserCurrent) &gt; obj.N_Heater
+                obj.ErrCode = circshift(obj.ErrCode, - 1);
+                obj.ErrCode(end) = 3;
+                obj.error_Handling();
+                In_MaxUserCurrent = In_MaxUserCurrent( <span class="keyword">...</span>
+                    1 : obj.N_Heater);
+            <span class="keyword">end</span>
+            <span class="keyword">for</span> n = 1 : length(In_MaxUserCurrent)
+                obj.Heater_Conf.MaxCurrent(n) = 0;
+</pre><p>Set mode of maximum output current to user defined.</p><pre class="codeinput">                obj.Heater_Conf.MaxUserCurrent = In_MaxUserCurrent(n);
+            <span class="keyword">end</span>
+            obj.set_HeaterConf(obj.Heater_Conf);
+            Out_ErrCode = obj.ErrCode(end);
+            obj.error_Handling();
+        <span class="keyword">end</span>
+</pre><h2 id="54">Get Current Temperature Sensor Configuration</h2><p>This function queries <b>all</b> temperature sensors' configurations from the controller, and stores them in class property TempSensor_Conf (near line 110-ish, ref: <i>Manual</i> section 6.6.1 [p. 136]).</p><pre class="codeinput">        <span class="keyword">function</span> [Out_ErrCode, Out_TempSensor_Conf] <span class="keyword">...</span>
+                = get_TempSensorConf(obj)
+            <span class="keyword">for</span> n = 1 : obj.N_TempSensor
+                [~, response] = obj.send_Query( <span class="keyword">...</span>
+                    sprintf(<span class="string">"INTYPE?%s"</span>, char(64 + n)));
+</pre><p>char(64 + n) returns the n-th capital letter in the alphabet.</p><pre class="codeinput">                Out_TempSensor_Conf.Connected(n) = char(64 + n);
+                Out_TempSensor_Conf.Type(n) = str2double( <span class="keyword">...</span>
+                    extractBetween(response, 1, 1));
+                Out_TempSensor_Conf.AutoRange(n) = str2double( <span class="keyword">...</span>
+                    extractBetween(response, 3, 3));
+                Out_TempSensor_Conf.Range(n) = str2double( <span class="keyword">...</span>
+                    extractBetween(response, 5, 5));
+                Out_TempSensor_Conf.Compensation(n) = str2double( <span class="keyword">...</span>
+                    extractBetween(response, 7, 7));
+                Out_TempSensor_Conf.Units(n) = str2double( <span class="keyword">...</span>
+                    extractBetween(response, 9, 9));
+            <span class="keyword">end</span>
+            Out_ErrCode = obj.ErrCode(end);
+            obj.TempSensor_Conf = Out_TempSensor_Conf;
+        <span class="keyword">end</span>
+</pre><h2 id="56">Set Temperature Sensor Configuration</h2><p>This function set temperature sensor configuration from the input.</p><p><b>Input</b></p><div><ul><li>In_TempSensor_Conf (<i>struct</i> that matches <b>all</b> the fields listed in class property TempSensor_Conf defined near line 110-ish, ref: <i>Manual</i> section 6.6.1 [p. 136]).</li></ul></div><pre class="codeinput">        <span class="keyword">function</span> Out_ErrCode = set_TempSensorConf(obj, <span class="keyword">...</span>
+                In_TempSensor_Conf)
+            <span class="keyword">if</span> length(In_TempSensor_Conf.Connected) &gt; obj.N_TempSensor
+                obj.ErrCode = circshift(obj.ErrCode, - 1);
+                obj.ErrCode(end) = 3;
+                obj.error_Handling();
+                In_TempSensor_Conf.Connected <span class="keyword">...</span>
+                    = In_TempSensor_Conf.Connected(1 : obj.N_TempSensor);
+            <span class="keyword">end</span>
+            <span class="keyword">for</span> n = 1 : length(In_TempSensor_Conf.Connected)
+                command = sprintf(<span class="string">"INTYPE%s,%.0f,%.0f,%.0f,%.0f,%.0f"</span>, <span class="keyword">...</span>
+                    In_TempSensor_Conf.Connected(n), <span class="keyword">...</span>
+                    In_TempSensor_Conf.Type(n), <span class="keyword">...</span>
+                    In_TempSensor_Conf.AutoRange(n), <span class="keyword">...</span>
+                    In_TempSensor_Conf.Range(n), <span class="keyword">...</span>
+                    In_TempSensor_Conf.Compensation(n), <span class="keyword">...</span>
+                    In_TempSensor_Conf.Units(n));
+                obj.send_Command(command);
+                pause(obj.Time_Wait)
+                [~, response] = obj.send_Query( <span class="keyword">...</span>
+                    sprintf(<span class="string">"INTYPE?%s"</span>, In_TempSensor_Conf.Connected(n)));
+                obj.ErrCode = circshift(obj.ErrCode, - 1);
+                obj.ErrCode(end) = 2 * ~isequal( <span class="keyword">...</span>
+                    str2num(extractBetween(command, 9, 17)), <span class="keyword">...</span>
+                    str2num(response));
+            <span class="keyword">end</span>
+            obj.get_TempSensorConf();
+            Out_ErrCode = obj.ErrCode(end);
+            obj.error_Handling();
+        <span class="keyword">end</span>
+</pre><h2 id="57">Get Current Target Temperature Level</h2><p>This function quries the target temperature levels on <b>all</b> 4 temperature sensors. The unit is by default K, unless otherwise speficied in class property TempSensor_Conf.Units (near line 110-ish, ref: <i>Manual</i> Section 6.6.1 [p. 134]).</p><pre class="codeinput">        <span class="keyword">function</span> [Out_ErrCode, Out_Temp_Targ] = get_TempTarg(obj)
+            Out_Temp_Targ = zeros(1, obj.N_TempSensor);
+            <span class="keyword">for</span> n = 1 : obj.N_TempSensor
+                [~, response] = obj.send_Query( <span class="keyword">...</span>
+                    sprintf(<span class="string">"SETP?%.0f"</span>, n));
+                Out_Temp_Targ(n) = str2double(response);
+            <span class="keyword">end</span>
+            obj.Temp_Targ = Out_Temp_Targ;
+            Out_ErrCode = obj.ErrCode(end);
+        <span class="keyword">end</span>
+</pre><h2 id="58">Set Target Temperature Level</h2><p>This function set the target temperature levels.</p><p><b>Inputs</b></p><div><ul><li>In_Temp_Targ (<i>double (matrix)</i>): Target temperature values in K. If the input is n-by-1 matrix, then the first n of the 4 temperature sensors are configured.</li></ul></div><pre class="codeinput">        <span class="keyword">function</span> Out_ErrCode = set_TempTarg(obj, In_Temp_Targ)
+            <span class="keyword">if</span> length(In_Temp_Targ) &gt; obj.N_TempSensor
+                obj.ErrCode = circshift(obj.ErrCode, - 1);
+                obj.ErrCode(end) = 3;
+                obj.error_Handling();
+                In_Temp_Targ = In_Temp_Targ(1 : obj.N_TempSensor);
+            <span class="keyword">end</span>
+            <span class="keyword">for</span> n = 1 : length(In_Temp_Targ)
+                obj.send_Command( <span class="keyword">...</span>
+                    sprintf(<span class="string">"SETP%.0f,%.1f"</span>, n, In_Temp_Targ(n)));
+            <span class="keyword">end</span>
+            pause(obj.Time_Wait)
+            [~, temp_Targ] = obj.get_TempTarg();
+            obj.ErrCode = circshift(obj.ErrCode, - 1);
+            obj.ErrCode(end) = 2 * ~isequal( <span class="keyword">...</span>
+                temp_Targ(1 : length(In_Temp_Targ)), In_Temp_Targ);
+            Out_ErrCode = obj.ErrCode(end);
+            obj.error_Handling();
+        <span class="keyword">end</span>
+</pre><h2 id="59">Get Current Temperature Readings</h2><p>This function queries current temperature readings on the sensors selected by input. Unit in K. (ref: <i>Manual</i> Section 6.6.1 [p. 137])</p><p><b>Inputs</b></p><div><ul><li>In_Sensor_Select (<i>char (array)</i>): Selection of temperature sensors, e.g. 'A', 'B', 'AB', 'AC' or 'ABCD'. If empty, then all temperature readings will be queried.</li></ul></div><pre class="codeinput">        <span class="keyword">function</span> [Out_ErrCode, Out_Temp] = get_Temp(obj, varargin)
+            <span class="keyword">if</span> isempty(varargin)
+                In_Sensor_Select = char(64 + (1 : obj.N_TempSensor));
+            <span class="keyword">else</span>
+                In_Sensor_Select = varargin{:};
+            <span class="keyword">end</span>
+            <span class="keyword">if</span> length(In_Sensor_Select) &gt; obj.N_TempSensor
+                obj.ErrCode = circshift(obj.ErrCode, - 1);
+                obj.ErrCode(end) = 3;
+                obj.error_Handling();
+                In_Sensor_Select = In_Sensor_Select(1 : obj.N_TempSensor);
+            <span class="keyword">end</span>
+            [~, response] = obj.send_Query(<span class="string">"KRDG?"</span>);
+</pre><p>The function will always queries temperature readings on <b>all</b> sensors and update the result in class property Temp.</p><pre class="codeinput">            obj.Temp = str2num(response);
+            Out_Temp = obj.Temp(double(In_Sensor_Select) - 64);
+</pre><p>double() - 64 returns the corresponding sequence numbers of letters in alphabet (capital), e.g. double('A') - 64 = 1, double('ACD') - 64 = [1 3 4].</p><pre class="codeinput">            Out_ErrCode = obj.ErrCode(end);
+        <span class="keyword">end</span>
+</pre><h2 id="62">Update All Class Properties</h2><p>This function updates all class properties.</p><pre class="codeinput">        <span class="keyword">function</span> Out_ErrCode = update_AllProperties(obj)
+            obj.get_SerialNumber();
+            obj.get_HeaterConf();
+            obj.get_HeaterLevel();
+            obj.get_HeaterPercentage();
+            obj.get_TempSensorConf();
+            obj.get_TempTarg();
+            obj.get_Temp();
+            Out_ErrCode = obj.ErrCode(end);
+        <span class="keyword">end</span>
+</pre><pre class="codeinput">    <span class="keyword">end</span>
+</pre><pre class="codeinput"><span class="keyword">end</span>
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% MATLAB Driver for Lake Shore 336 Heater Controller
+% Provide a class that includes all the basic controls and error handling
+% of Lake Shore 336 heater controller using serial / USB connection, for
+% intance: create and terminate connection, set heater level, get
+% temperature readings.
+%
+% * This script is developed and tested by *Yuanqi Lyu*
+% (yuanqilyu@berkeley.edu) at *University of California, Berkeley*. All
+% rights reserved.
+% * This script is tested to be compatiable with *MATLAB 2020b* in Feb
+% 2021.
+% * The manual of the heater controller can be downloaded from
+% <https://www.lakeshore.com/docs/default-source/product-downloads/336_manual.pdf
+% Lake Shore> support website.
+% * *Standard disclaimer*: there is no spelling check function for the
+% comments.
+% * This script and its corresponding project is available on 
+% <https://github.com/Yuanqi137/LakeShoreController GitHub>.
+%
+
+classdef class_Driver_LS336 < handle
+    %%%
+    % This is a MATLAB handle class
+    % (<https://www.mathworks.com/help/matlab/handle-classes.html 
+    % ref>), which provide real time value change in class method 
+    % functions.
+    %% *PROPERTIES*
+    % Properties, values and settings of the heater controller.
+    %% Constant properties
+       
+    properties (Constant)
+        %%%
+        % Do *NOT* manually edit.
+        SerialPort_BaudRate = 57600;
+        SerialPort_Conf = struct(...
+            'DataBits', 7, ...
+            'StopBits', 1, ...
+            'Parity', 'odd', ...
+            'FlowControl', 'none', ...
+            'Timeout', 5);
+        %%%
+        % *SerialPort_BaudRate* (_double_ - constant):
+        % This is the required baud rate for Lake Shore 336 (ref: _Manual_
+        % section 6.3.2 [p. 104], same for SerialPort_Conf).
+        %
+        % *SerialPort_Conf* (_struct_ - constant):
+        % This struct contains all parameter of the serial port connection 
+        % required by Lake Shore 336.
+        
+        %%%
+        % Adjust by needs.
+        Time_Wait = 0.1
+        %%%
+        % *Time_Wait* (_double_ - constant):
+        % Number of second to wait so that the last operation is complete,
+        % use between consecutive send_Command() and / or send_Query().
+    end
+    %% Public Accessible Properties
+    
+    properties (Access = public)
+        ErrCode = zeros(1, 20);
+        %%%
+        % *ErrCode* (_double (matrix)_):
+        % Error code generated when executing the class methods, here:
+        %
+        % * 1 or -1 stands for serial connection error or instability, 
+        % generally the connection will be recreated afterwards.
+        % * 2 or -2 stands for communication error, where the intended 
+        % parameter for the heater is not set correctly.
+        % * 3 or -3 stands for the number of heater / temperature sensor
+        % addressed in a command is longer than that of the connected.
+        %
+        % The last 20 result of error codes is stored.
+        
+        N_Heater = 1;
+        N_TempSensor = 1;
+        %%%
+        % *N_Heater* and *N_TempSenor* (_double_):
+        % Number of heaters and temperature sensors connected to the heater
+        % controller. Lake Shore 336 allows maximum of 2 heaters and 4
+        % temperature sensor inputs. For sake of simplicity, please connect
+        % the heaters and temperature sensors from lower number slots to
+        % higher number slots (1 to 2, A to D).
+        
+        SerialNumber        
+        SerialPort
+        SerialPort_Name
+        %%%
+        % *SerialPort* (_serial port object_):
+        % The serial connection between the computer and the heater 
+        % controller. This property is created when the class in
+        % contructed. Deletion of this property will terminate the serial 
+        % connection, which happens automatically when a class instance 
+        % is deleted.
+        %
+        % *SerialPort_Name* (_string_):
+        % Name of the serial port, e.g. "COM5".
+        
+        Heater_Percentage
+        Heater_Level = 0;
+        Heater_Level_Targ = 0;
+        Heater_Conf = struct( ...
+            'Connected', 1, ...
+            'Resistance', 2, ...
+            'MaxCurrent', 0, ...
+            'MaxUserCurrent', 0.000, ...
+            'Display', 1);
+        %%%
+        % *Heater_Level* (_double (matrix)_):
+        % Current levels of heaters: 0 = Off, 1 = Low, 2 = Medium, 3 =
+        % High.
+        %
+        % *Heater_Level_Targ* (_double (matrix)_):
+        % Target levels of heaters after they were turned on: 
+        % 1 = Low, 2 = Medium, 3 = High.
+        %
+        % *Heater_Conf* (_struct_):
+        % This is the configuration for the heaters connected to the
+        % controller (ref: _Manual_ section 6.6.1 [p. 132]). Here are 
+        % details of each field:
+        % 
+        % * _Connected_: Connected heater: 1, 2 or [1, 2].
+        % * _Resistance_: Heater resistence: 1 = 25 Ohm, 2 = 50 Ohm. If 
+        % both heaters are connected, then use a 1-by-2 matrix, e.g. [0, 0]
+        % (same for the rest of the fields).
+        % * _MaxCurrent_: Maximum heater output current: 0 = User 
+        % Specified, 1 = 0.707 A, 2 = 1 A, 3 = 1.141 A, 4 = 1.732 A.
+        % * _MaxUserCurrent_: Maximum heater output current specified by
+        % user if _MaxCurrent_ is set to be zero. (_three decimal points 
+        % signed_)
+        % * _Display_: Specifies whether the heater output displays in 
+        % current or power (current mode only): 1 = Current, 2 = Power.
+        %
+        
+        Temp
+        Temp_Targ
+        TempSensor_Conf = struct( ...
+            'Connected', 'A', ...
+            'Type', 2, ...
+            'AutoRange', 0, ...
+            'Range', 0, ...
+            'Compensation', 0, ...
+            'Units', 1);
+        %%%
+        % *Temp* (_double (matrix)_): 
+        % Current temperature readout by the sensors (A, B, C, D or 
+        % conbinations determined by connected sensors). Its unit should be
+        % in K, unless specified otherwise by TempSensor_Conf.Units.
+        %
+        % *Temp_Targ* (_double (matrix)_): 
+        % Target temperature to be achieved by heaters (1, 2 or both).Its
+        % unit should be in K, or specified by TempSensor_Conf.Units.
+        %
+        % *TempSensor_Conf* (_struct_):
+        % This is the configuration for the temperature sensors connected 
+        % to the controller (ref: _Manual_ section 6.6.1 [p. 135]). Here
+        % are details of each field:
+        %
+        % * _Connected_ (_char (array)_): Connected temperature sensor:
+        % 'A', 'B', 'C', 'D' or combinations like 'AB', 'AC', 'ABCD'.
+        % * _Type_: input sensor type: 0 = Disabled, 1 = Diode, 2 = 
+        % Platinum RTD, 3 = NTC RTD, 4 = Thermocouple. If both temperature
+        % sensors are connected, then use a 1-by-2 matrix, e.g. [2, 2]
+        % (same for the rest of the fields).
+        % * _AutoRange_: Autorange: 0 = Off, 1 = On.
+        % * _Range_: Specifies input range when autorange is off. See table
+        % 6-8 (_Manual_ [p. 135]).
+        % * _Compensation_: Input compensation: 0 = Off, 1 = On.
+        % * _Units_: Unit for sensor readings *AND* control setpoint: 1 = 
+        % Kelvin, 2 = Celsius, 3 = Sensor.
+        %
+        
+    end
+    %% *METHODS*
+    methods
+        %% *Fundamental Functions*
+        % Essential functions that enable communication between the
+        % computer and heater controller with basic error handling.
+        %% Class Constructor & Initialization Function
+        % Create an class instance and initialize the connection to the 
+        % heater controller.
+        %
+        % *Inputs*
+        %
+        % * In_SerialPort_Name (_string_): Name of the serial port, e.g.
+        % "COM5".
+        % * In_N_Heater (_double_): Number of heaters connected to the
+        % controller, must be 1 or 2.
+        % * In_N_TempSensor (_double_): Number of temperature sensors
+        % connected, but be integer between 1 and 4.
+        % * vargin (_optional inputs_): If provided, it must be in the
+        % shape of name-valued pair: "HeaterConf", Heater_Conf (_struct_
+        % that matches *all* the field listed in class property
+        % Heater_Conf), "TempSensorConf", TempSensor_Conf (_struct_ that
+        % matches *all* the field listed in class property
+        % TempSensor_Conf).
+        
+        function [obj, Out_ErrCode] = class_Driver_LS336( ...
+                In_SerialPort_Name, In_N_Heater, In_N_TempSensor, varargin)
+            obj.SerialPort_Name = In_SerialPort_Name;
+            obj.create_SerialPort();
+            
+            obj.N_Heater = In_N_Heater;
+            obj.N_TempSensor = In_N_TempSensor;
+                     
+            if ~isempty(varargin)
+                In_Conf = struct(varargin{:});
+                if isfield(In_Conf, 'HeaterConf')
+                     obj.set_HeaterConf(In_Conf.HeaterConf);
+                end
+                if isfield(In_Conf, 'TempSensorConf')
+                    obj.set_TempSensorConf(In_Conf.TempSensorConf);
+                end
+            end
+            %%%
+            % If specified in the input, update heater and temperature
+            % sensor configurations.
+                        
+            obj.update_AllProperties();
+            %%% 
+            % Update all the class properties.
+            
+            Out_ErrCode = obj.ErrCode(end);            
+        end
+        
+        %% Class Destructor
+        % This function is excuted before the instance of the class is
+        % destroyed.
+        
+        function delete(obj)
+            if ~isempty(obj.SerialPort)
+                obj.terminate_SerialPort();
+            end
+        end
+        
+        %% Error Codes Display
+        % This function is used to display user friendly information based
+        % on the error code encountered during excutions of the class
+        % methods. It is applied liberally in all other methods. 
+        
+        function error_Handling(obj)
+            msgboxStyle.Interpreter = 'tex';
+            msgboxStyle.WindowStyle = 'modal';
+            if any(obj.ErrCode == 1)
+                %%%
+                % Serial communication instability.
+
+                msgbox({['\fontsize{10}{\bfUnable to establish stable ' ...
+                    'serial connection!}'], ...
+                    ['The serial port requested may be currently in ' ...
+                    'use by other programs!'], ...
+                    'Check WARNING!'}, ...
+                    'ERROR - Lake Shore 336', 'error', msgboxStyle);
+                obj.ErrCode(obj.ErrCode == 1) = - 1;
+            elseif any(obj.ErrCode == 2)
+                %%%
+                % Target settings are different from current settings.
+
+                msgbox({['\fontsize{10}{\bfUnable to complete ' ...
+                    'required setting!}'], ...
+                    ['Current parameters of the heater may not be ' ...
+                    'desired values!'], ...
+                    'Check WARNING!'}, ...
+                    'ERROR - Lake Shore 336', 'warn', msgboxStyle);
+                obj.ErrCode(obj.ErrCode == 2) = - 2;
+             elseif any(obj.ErrCode == 3)
+                %%%
+                % Number of heater / sensor in command is larger than that
+                % of connected.
+
+                msgbox({['\fontsize{10}{\bfToo many heater / ', ...
+                    'temperature sensor in command!}'], ...
+                    sprintf(['There is / are %.0f heater(s) and %.0f ', ...
+                    'temperature sensor(s) connected!'], ...
+                    obj.N_Heater, obj.N_TempSensor)}, ...
+                    'ERROR - Lake Shore 336', 'warn', msgboxStyle);
+                obj.ErrCode(obj.ErrCode == 2) = - 3;
+            end
+            if sum(obj.ErrCode ~= 0) > 3
+                %%%
+                % Too many errors.
+                
+                msgbox({['\fontsize{10}{\bfToo many errors! ', ... 
+                    'Program halted!}'], ...
+                    'Check WARNING!'}, ...
+                    'ERROR - Lake Shore 336', 'error', msgboxStyle);
+                return
+            end
+        end
+        
+        %% Serial Port - Creation
+        % This function creates the serial port needed for connection based
+        % on class properties SerialPort_Name, SerialPort_BaudRate and
+        % SerialPort_Conf.
+        
+        function [Out_ErrCode, Out_SerialPort] = create_SerialPort(obj)
+            serialPort_Conf_Cell = namedargs2cell(obj.SerialPort_Conf);
+            %%% 
+            % Here we convert obj.SerialPort_Conf to cell so that it can be
+            % passed as name-value pairs in the serialport() function.
+            
+            try
+                Out_SerialPort = serialport(...
+                    obj.SerialPort_Name, ...
+                    obj.SerialPort_BaudRate, ...
+                    serialPort_Conf_Cell{:});
+                %%%
+                % The serialport() function (<https://www.mathworks.com/help/matlab/ref/serialport.html ref>)
+                % and related object / object function are the new protocal
+                % MATLAB(R) try to push for serial connection after version
+                % 2019b.
+                
+                Out_ErrCode = 0;
+            catch errMsg
+                Out_SerialPort = [];
+                Out_ErrCode = 1;
+                warning(errMsg.message)
+            end
+            obj.SerialPort = Out_SerialPort;
+            obj.ErrCode = circshift(obj.ErrCode, - 1);
+            obj.ErrCode(end) = Out_ErrCode;
+            %%%
+            % Circular shift the array of error codes so that there are
+            % always 20 of them stored.
+            
+            obj.error_Handling();          
+        end
+        
+        %% Serial Port - Termination
+        % This fucntion terminates the serial connection by deleting the
+        % serial port object created as class property.
+        
+        function Out_ErrCode = terminate_SerialPort(obj)
+            delete(obj.SerialPort);
+            obj.ErrCode = circshift(obj.ErrCode, - 1);
+            obj.ErrCode(end) = 0;
+            Out_ErrCode = obj.ErrCode(end);
+        end
+        
+        %% Serial Port - Recreation
+        % This function is to improve the robustness of the driver.
+        % Generally, if an error happens during some operation, we use this
+        % function to recreate the serial port and try again.
+
+        function [Out_ErrCode, Out_SerialPort] = recreate_SerialPort(obj)
+            obj.terminate_SerialPort();
+            [Out_ErrCode, Out_SerialPort] = obj.create_SerialPort();
+        end
+        
+        %% Serial Port - Send Command
+        % This function sends command via the serial port using the
+        % .writeline() object function of serialport.
+        
+        function Out_ErrCode = send_Command(obj, In_Command)
+            try
+                obj.SerialPort.writeline(In_Command);
+                obj.ErrCode = circshift(obj.ErrCode, - 1);
+                obj.ErrCode(end) = 0;
+            catch errMsg
+                %%%
+                % Recreate the serial port if encountered any connection
+                % issue while writing data and set the error code to 1.
+                
+                obj.ErrCode = circshift(obj.ErrCode, - 1);
+                obj.ErrCode(end) = 1;
+                obj.recreate_SerialPort();
+                obj.SerialPort.writeline(In_Command);
+                warning(errMsg.message)
+            end
+            Out_ErrCode = obj.ErrCode(end);
+            obj.error_Handling();
+        end
+        
+        %% Serial Port - Query
+        % This function sends command via the serial port using the
+        % .writeline() and .readline() object functions of serialport.
+        
+        function [Out_ErrCode, Out_Response] = send_Query(obj, In_Query)
+            try
+                obj.SerialPort.writeline(In_Query);
+                Out_Response = obj.SerialPort.readline();
+                obj.ErrCode = circshift(obj.ErrCode, - 1);
+                obj.ErrCode(end) = 0;
+            catch errMsg
+                obj.ErrCode = circshift(obj.ErrCode, - 1);
+                obj.ErrCode(end) = 1;
+                obj.recreate_SerialPort();
+                obj.SerialPort.writeline(In_Query);
+                Out_Response = obj.SerialPort.readline();
+                warning(errMsg.message)
+            end
+            Out_ErrCode = obj.ErrCode(end);
+            obj.error_Handling();
+            pause(obj.Time_Wait)
+        end
+        
+        %% *Higher-level Functions*
+        % The functions that acutually change the settings and acquire the
+        % data from the heater controller. The reference of the serial 
+        % commands used in the functions bellow can be found in the manual
+        % (ref: _Manual_ section 6.6 [p. 124]).
+        %% Get the Serial Number of the Heater Controller
+                
+        function [Out_ErrCode, Out_SerialNumber] = get_SerialNumber(obj)
+            [~, response] = obj.send_Query("*IDN?");
+            Out_SerialNumber = extractBetween(response, 15, 21);
+            %%%
+            % Get part of the return that is the serial number (ref:
+            % _Manual_ [p.125]).
+            
+            obj.ErrCode = circshift(obj.ErrCode, - 1);
+            obj.ErrCode(end) = 2 * isempty(Out_SerialNumber);
+            %%%
+            % obj.ErrCode = 2 if somehow the serail number obtained is 
+            % empty, else it is 0.
+            
+            obj.SerialNumber = Out_SerialNumber;
+            %%%
+            % Update the relavent class property.
+            
+            Out_ErrCode = obj.ErrCode(end);
+            obj.error_Handling();
+        end
+        
+        %% Obtain Current Heater Configuration
+        % This function queries *both* heaters' configurations from the 
+        % controller, and stores them in class property Heater_Conf (near 
+        % line 75-ish, ref: _Manual_ section 6.6.1 [p. 134]).
+        
+        function [Out_ErrCode, Out_Heater_Conf] = get_HeaterConf(obj)
+            for n = 1 : obj.N_Heater
+                [~, response] = obj.send_Query( ...
+                    sprintf("HTRSET?%.0f", n));
+                Out_Heater_Conf.Connected(n) = n;
+                response = str2num(response); %#ok<*ST2NM>
+                %%%
+                % Ignore the stupid warning about str2num() here! The same
+                % applies for the rest of the code. The "%#ok<*ST2NM>" is
+                % to supress this warning.
+                
+                Out_Heater_Conf.Resistance(n) = response(1);
+                Out_Heater_Conf.MaxCurrent(n) = response(2);
+                Out_Heater_Conf.MaxUserCurrent(n) = response(3);
+                Out_Heater_Conf.Display(n) = response(4);
+            end
+            Out_ErrCode = obj.ErrCode(end);
+            obj.Heater_Conf = Out_Heater_Conf;
+            obj.error_Handling();
+        end
+                
+        %% Set Heater Configuration
+        % This function set heater configuration from the input. 
+        %
+        % *Input*
+        % 
+        % * In_Heater_Conf (_struct_ that matches *all* the fields
+        % listed in class property Heater_Conf defined near line 75-ish, 
+        % ref: _Manual_ section 6.6.1 [p. 136]).
+        
+        function Out_ErrCode = set_HeaterConf(obj, ...
+                In_Heater_Conf)
+            for n = 1 : length(In_Heater_Conf.Connected)
+                command = sprintf("HTRSET%.0f,%.0f,%.0f,+%.3f,%.0f", ...
+                    In_Heater_Conf.Connected(n), ...
+                    In_Heater_Conf.Resistance(n), ...
+                    In_Heater_Conf.MaxCurrent(n), ...
+                    In_Heater_Conf.MaxUserCurrent(n), ...
+                    In_Heater_Conf.Display(n));
+                obj.send_Command(command);
+                pause(obj.Time_Wait)
+                %%%
+                % Pause a bit so that the setting can be changed on the
+                % heater side.
+                
+                [~, response] = obj.send_Query(sprintf("HTRSET?%.0f", n));
+                obj.ErrCode = circshift(obj.ErrCode, - 1);
+                obj.ErrCode(end) = 2 * ~isequal( ...
+                    str2num(extractBetween(command, 9, 20)), ...
+                    str2num(response));
+                %%%
+                % Compare current setting of the heater with the intended,
+                % if the two are not the same, then set the error code to
+                % 2.
+                
+            end
+            obj.get_HeaterConf();
+            %%%
+            % Update the current heater configurations in class properties.
+            
+            Out_ErrCode = obj.ErrCode(end);
+            obj.error_Handling();
+        end
+        
+        %% Set Target Heater Level
+        % This function set the target heater level, which only become
+        % effective *after* the heater is turned on using 
+        % obj.set_HeaterONOFF() class function.
+        %
+        % *Inputs*
+        %
+        % * In_Heater_Level_Targ (_double (matrix)_): Target heater levels,
+        % 0 = Off, 1 = Low, 2 = Medium, 3 = High. If only have one value,
+        % e.g. 1, then it only applies to heater 1 (low); if there are two
+        % values arranged in a 2-by-1 matrix, e.g. [2, 1], then it applies
+        % to both heaters (heater 1: medium, heater 2: low).
+        %
+        
+        function Out_ErrCode = set_HeaterLevelTarg(obj, ...
+                In_Heater_Level_Targ)
+            if length(In_Heater_Level_Targ) > obj.N_Heater
+                obj.ErrCode = circshift(obj.ErrCode, - 1);
+                obj.ErrCode(end) = 3;
+                obj.error_Handling();
+                In_Heater_Level_Targ = In_Heater_Level_Targ( ...
+                    1 : obj.N_Heater);
+            end
+            %%%
+            % Trim the extra commands when there are more heaters in
+            % command than connected.
+            
+            obj.Heater_Level_Targ = In_Heater_Level_Targ;            
+            Out_ErrCode = obj.ErrCode(end);
+        end
+        
+        %% Get Current Heater Levels
+        % This function querys current heater levels on *both* heater 
+        % outputs.
+        
+        function [Out_ErrCode, Out_Heater_Level] = get_HeaterLevel(obj)
+            Out_Heater_Level = zeros(1, obj.N_Heater);
+            for n = 1 : obj.N_Heater
+                [~, response] = obj.send_Query( ...
+                    sprintf('RANGE?%.0f', n));
+                Out_Heater_Level(n) = str2double(response);
+            end
+            obj.Heater_Level = Out_Heater_Level;
+            Out_ErrCode = obj.ErrCode(end);
+        end
+        
+        %% Get Current Heater Percentages
+        % This function querys current heater percentages on *both* heater 
+        % outputs.
+        
+        function [Out_ErrCode, Out_Heater_Percentage] ...
+                = get_HeaterPercentage(obj)
+            Out_Heater_Percentage = zeros(1, obj.N_Heater);
+            for n = 1 : obj.N_Heater
+                [~, response] = obj.send_Query( ...
+                    sprintf('HTR?%.0f', n));
+                Out_Heater_Percentage(n) = str2double(response);
+            end
+            obj.Heater_Percentage = Out_Heater_Percentage;
+            Out_ErrCode = obj.ErrCode(end);
+        end
+                
+        %% Turn ON/OFF the Heaters
+        % This function turn on/off the heater and set them to the target
+        % heater levels defined as class property of Heater_Level.
+        %
+        % *Inputs*
+        %
+        % * In_Heater_ONOFF (_double (matrix)_): 1 = On, 0 = Off, if the
+        % input is a single number, then only heater 1 is turned ON/OFF;
+        % else if the input is a 2-by-1 matrix, e.g. [0, 1], both heaters
+        % are addressed (here heater 1: OFF, heater 2: ON).
+        %
+        
+        function [Out_ErrCode, Out_Heater_Level] = set_HeaterONOFF(obj, ...
+                In_Heater_ONOFF)
+            if length(In_Heater_ONOFF) > obj.N_Heater
+                obj.ErrCode = circshift(obj.ErrCode, - 1);
+                obj.ErrCode(end) = 3;
+                obj.error_Handling();
+                In_Heater_ONOFF = In_Heater_ONOFF( ...
+                    1 : obj.N_Heater);
+            end
+            for n = 1 : length(In_Heater_ONOFF)
+                obj.send_Command( ...
+                    sprintf('RANGE%.0f,%.0f', ...
+                    n, In_Heater_ONOFF * obj.Heater_Level_Targ(n)));
+            end
+            pause(obj.Time_Wait)
+            [~, Out_Heater_Level] = obj.get_HeaterLevel();
+            Out_Heater_Level ...
+                = Out_Heater_Level(1 : length(In_Heater_ONOFF));
+            obj.ErrCode = circshift(obj.ErrCode, - 1);
+            obj.ErrCode(end) = 2 * ~isequal(...
+                    In_Heater_ONOFF * obj.Heater_Level_Targ( ...
+                        1 : length(In_Heater_ONOFF)), ...
+                    Out_Heater_Level);
+                %%%
+            % Check if the current heater levels set on the heater are the
+            % target values. If not then set the error code to 2 and
+            % display a warning.
+            Out_ErrCode = obj.ErrCode(end);
+            obj.error_Handling();
+        end
+        
+        %% Set Maximum User Current Output of the Heaters
+        % This function sets the maximum heater output current. (ref:
+        % _Manual_ [p. 133]).
+        %
+        % *Inputs*
+        %
+        % * In_MaxUserCurrent (_double (matrix)_): If the input is a single
+        % number, then only heater 1 is configured, else if the input is a 
+        % 2-by-1 matrix, e.g. [1.2, 1.3], then both heaters are configured
+        % (here heater 1: 1.2 A, heater 2: 1.3 A).
+        %
+        
+        function Out_ErrCode = set_MaxUserCurrent(obj, In_MaxUserCurrent)
+            obj.get_HeaterConf();
+            if length(In_MaxUserCurrent) > obj.N_Heater
+                obj.ErrCode = circshift(obj.ErrCode, - 1);
+                obj.ErrCode(end) = 3;
+                obj.error_Handling();
+                In_MaxUserCurrent = In_MaxUserCurrent( ...
+                    1 : obj.N_Heater);
+            end
+            for n = 1 : length(In_MaxUserCurrent)
+                obj.Heater_Conf.MaxCurrent(n) = 0; 
+                %%%
+                % Set mode of maximum output current to user defined.
+                
+                obj.Heater_Conf.MaxUserCurrent = In_MaxUserCurrent(n);
+            end
+            obj.set_HeaterConf(obj.Heater_Conf);
+            Out_ErrCode = obj.ErrCode(end);
+            obj.error_Handling();
+        end
+        
+        %% Get Current Temperature Sensor Configuration
+        % This function queries *all* temperature sensors' configurations 
+        % from the controller, and stores them in class property 
+        % TempSensor_Conf (near line 110-ish, ref: _Manual_ section 6.6.1 
+        % [p. 136]).
+        
+        function [Out_ErrCode, Out_TempSensor_Conf] ...
+                = get_TempSensorConf(obj)
+            for n = 1 : obj.N_TempSensor
+                [~, response] = obj.send_Query( ...
+                    sprintf("INTYPE?%s", char(64 + n)));
+                %%%
+                % char(64 + n) returns the n-th capital letter in the
+                % alphabet.
+                
+                Out_TempSensor_Conf.Connected(n) = char(64 + n);
+                Out_TempSensor_Conf.Type(n) = str2double( ...
+                    extractBetween(response, 1, 1));
+                Out_TempSensor_Conf.AutoRange(n) = str2double( ...
+                    extractBetween(response, 3, 3));
+                Out_TempSensor_Conf.Range(n) = str2double( ...
+                    extractBetween(response, 5, 5));
+                Out_TempSensor_Conf.Compensation(n) = str2double( ...
+                    extractBetween(response, 7, 7));
+                Out_TempSensor_Conf.Units(n) = str2double( ...
+                    extractBetween(response, 9, 9));
+            end
+            Out_ErrCode = obj.ErrCode(end);
+            obj.TempSensor_Conf = Out_TempSensor_Conf;
+        end
+                
+        %% Set Temperature Sensor Configuration
+        % This function set temperature sensor configuration from the 
+        % input. 
+        %
+        % *Input*
+        % 
+        % * In_TempSensor_Conf (_struct_ that matches *all* the fields 
+        % listed in class property TempSensor_Conf defined near line 
+        % 110-ish, ref: _Manual_ section 6.6.1 [p. 136]).
+        %
+        
+        function Out_ErrCode = set_TempSensorConf(obj, ...
+                In_TempSensor_Conf)
+            if length(In_TempSensor_Conf.Connected) > obj.N_TempSensor
+                obj.ErrCode = circshift(obj.ErrCode, - 1);
+                obj.ErrCode(end) = 3;
+                obj.error_Handling();
+                In_TempSensor_Conf.Connected ...
+                    = In_TempSensor_Conf.Connected(1 : obj.N_TempSensor);
+            end
+            for n = 1 : length(In_TempSensor_Conf.Connected)
+                command = sprintf("INTYPE%s,%.0f,%.0f,%.0f,%.0f,%.0f", ...
+                    In_TempSensor_Conf.Connected(n), ...
+                    In_TempSensor_Conf.Type(n), ...
+                    In_TempSensor_Conf.AutoRange(n), ...
+                    In_TempSensor_Conf.Range(n), ...
+                    In_TempSensor_Conf.Compensation(n), ...
+                    In_TempSensor_Conf.Units(n));
+                obj.send_Command(command);
+                pause(obj.Time_Wait)
+                [~, response] = obj.send_Query( ...
+                    sprintf("INTYPE?%s", In_TempSensor_Conf.Connected(n)));
+                obj.ErrCode = circshift(obj.ErrCode, - 1);
+                obj.ErrCode(end) = 2 * ~isequal( ...
+                    str2num(extractBetween(command, 9, 17)), ...
+                    str2num(response));
+            end
+            obj.get_TempSensorConf();
+            Out_ErrCode = obj.ErrCode(end);
+            obj.error_Handling();
+        end
+        
+        %% Get Current Target Temperature Level
+        % This function quries the target temperature levels on *all* 4
+        % temperature sensors. The unit is by default K, unless otherwise
+        % speficied in class property TempSensor_Conf.Units (near line
+        % 110-ish, ref: _Manual_ Section 6.6.1 [p. 134]).
+        
+        function [Out_ErrCode, Out_Temp_Targ] = get_TempTarg(obj)
+            Out_Temp_Targ = zeros(1, obj.N_TempSensor);
+            for n = 1 : obj.N_TempSensor
+                [~, response] = obj.send_Query( ...
+                    sprintf("SETP?%.0f", n));
+                Out_Temp_Targ(n) = str2double(response);
+            end
+            obj.Temp_Targ = Out_Temp_Targ;
+            Out_ErrCode = obj.ErrCode(end);
+        end
+        
+        %% Set Target Temperature Level
+        % This function set the target temperature levels.
+        %
+        % *Inputs*
+        %
+        % * In_Temp_Targ (_double (matrix)_): Target temperature values in
+        % K. If the input is n-by-1 matrix, then the first n of the 4
+        % temperature sensors are configured.
+        %
+        
+        function Out_ErrCode = set_TempTarg(obj, In_Temp_Targ)
+            if length(In_Temp_Targ) > obj.N_TempSensor
+                obj.ErrCode = circshift(obj.ErrCode, - 1);
+                obj.ErrCode(end) = 3;
+                obj.error_Handling();
+                In_Temp_Targ = In_Temp_Targ(1 : obj.N_TempSensor);
+            end
+            for n = 1 : length(In_Temp_Targ)
+                obj.send_Command( ...
+                    sprintf("SETP%.0f,%.1f", n, In_Temp_Targ(n)));
+            end
+            pause(obj.Time_Wait)
+            [~, temp_Targ] = obj.get_TempTarg();
+            obj.ErrCode = circshift(obj.ErrCode, - 1);
+            obj.ErrCode(end) = 2 * ~isequal( ...
+                temp_Targ(1 : length(In_Temp_Targ)), In_Temp_Targ);
+            Out_ErrCode = obj.ErrCode(end);
+            obj.error_Handling();
+        end
+        
+        %% Get Current Temperature Readings
+        % This function queries current temperature readings on the sensors
+        % selected by input. Unit in K. (ref: _Manual_ Section 6.6.1 [p.
+        % 137])
+        %
+        % *Inputs*
+        %
+        % * In_Sensor_Select (_char (array)_): Selection of temperature
+        % sensors, e.g. 'A', 'B', 'AB', 'AC' or 'ABCD'. If empty, then all
+        % temperature readings will be queried.
+        %
+        
+        function [Out_ErrCode, Out_Temp] = get_Temp(obj, varargin)
+            if isempty(varargin)
+                In_Sensor_Select = char(64 + (1 : obj.N_TempSensor));
+            else
+                In_Sensor_Select = varargin{:};
+            end
+            if length(In_Sensor_Select) > obj.N_TempSensor
+                obj.ErrCode = circshift(obj.ErrCode, - 1);
+                obj.ErrCode(end) = 3;
+                obj.error_Handling();
+                In_Sensor_Select = In_Sensor_Select(1 : obj.N_TempSensor);
+            end
+            [~, response] = obj.send_Query("KRDG?");
+            %%%
+            % The function will always queries temperature readings on
+            % *all* sensors and update the result in class property Temp.
+            
+            obj.Temp = str2num(response);
+            Out_Temp = obj.Temp(double(In_Sensor_Select) - 64);
+            %%%
+            % double() - 64 returns the corresponding sequence numbers of 
+            % letters in alphabet (capital), e.g. double('A') - 64 = 1, 
+            % double('ACD') - 64 = [1 3 4].
+            
+            Out_ErrCode = obj.ErrCode(end);
+        end
+        
+        %% Update All Class Properties
+        % This function updates all class properties.
+        
+        function Out_ErrCode = update_AllProperties(obj)
+            obj.get_SerialNumber();
+            obj.get_HeaterConf();
+            obj.get_HeaterLevel();
+            obj.get_HeaterPercentage();
+            obj.get_TempSensorConf();
+            obj.get_TempTarg();
+            obj.get_Temp();
+            Out_ErrCode = obj.ErrCode(end);           
+        end
+    end
+end
+##### SOURCE END #####
+--></body></html>

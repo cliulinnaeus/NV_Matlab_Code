@@ -1,0 +1,27 @@
+LIBRARY "dax22000_lib_DLL64"
+
+EXPORTS
+	DAx_SerNum	@1
+	DAx22000_PWR_DWN	@2
+	DAx22000_Debug	@3
+	DAx22000_Write_QDR	@4
+	DAx22000_WriteSegCode	@5
+	DAx22000_GetStatus	@6
+	DAx22000_Read_Reg	@7
+	DAx22000_Write_Reg	@8
+	DAx22000_GetCardDetails	@9
+	DAx22000_Reset_FPGA	@10
+	SetCardName	@11
+	DAx22000_Ext10MHz	@12
+	DAx22000_CreateSegments	@13
+	DAx22000_CreateSingleSegment	@14
+	DAx22000_Place_MRK2	@15
+	DAx22000_SoftTrigger	@16
+	DAx22000_Stop	@17
+	DAx22000_Run	@18
+	DAx22000_SelExtTrig	@19
+	DAx22000_SetClkRate	@20
+	DAx22000_Initialize	@21
+	DAx22000_Close	@22
+	DAx22000_Open	@23
+	DAx22000_GetNumCards	@24

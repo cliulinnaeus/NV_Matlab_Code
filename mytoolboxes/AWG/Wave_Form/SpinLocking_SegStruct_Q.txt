@@ -1,0 +1,2 @@
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\SpinLocking_Q_seg1.txt 962160 1 1
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\SpinLocking_Q_seg2.txt 962160 1 1

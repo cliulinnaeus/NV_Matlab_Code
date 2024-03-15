@@ -1,0 +1,56 @@
+GPIB version 2.0
+
+
+1. Introduction
+---------------
+
+Use this README file for building and installing GPIB for 32 bit Windows 
+(NT, 95 and 98) operating systems.
+
+
+2. Compiling GPIB
+-----------------
+
+GPIB should compile and run with either MATLAB version 4 or 5.
+
+Files required to build the MEX file ("gpib.dll") are "gpib.c" in the main 
+directory, "gpib.h" in this directory, and various files provided by 
+National Instruments (which I believe are "gpib-32.obj" and "decl-32.h").  
+
+I have not been able to build the MEX file from MATLAB's command line.
+See TMW's instructions for custom building of MEX-files (in section 8 of 
+the "MATLAB API Guide").
+
+See ftp://ftp.natinst.com/support/gpib/win98-95/ and 
+ftp://ftp.natinst.com/support/gpib/winNT/ for the latest National 
+Instruments software and build instructions.
+
+
+3. NI driver configuration
+--------------------------
+
+No configuration changes should be required.
+
+
+4. Pre-compiled binary
+-----------------------
+
+A complied MEX-file for NT 4.0 is included.  If you are running this OS, 
+the MEX-file should be ready to use.
+
+It's possible that it will work with Windows 95/98.
+
+
+5. Installation
+---------------
+
+Place both "gpib.dll" and "gpib.m" in a directory that is in MATLAB's 
+search path. The MATLAB command 'which gpib' should find the MEX-file and 
+'help gpib' should display the help file.
+
+
+Tom L. Davis
+Raytheon Systems
+tom-l-davis@raytheon.com
+
+

@@ -1,0 +1,2 @@
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\Echo_I_seg3.txt 2256 1 1
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\Echo_I_seg3.txt 2256 1 1

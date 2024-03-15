@@ -1,0 +1,2 @@
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\DEERNV_T2_Q_seg4.txt 2064 1 1
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\DEERNV_T2_Q_seg3.txt 2112 1 1

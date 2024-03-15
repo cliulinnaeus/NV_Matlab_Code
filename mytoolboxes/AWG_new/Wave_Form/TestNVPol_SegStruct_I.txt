@@ -1,0 +1,5 @@
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\TestNVPol_I_Seg1.txt 2064 1 1
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\TestNVPol_I_Seg1.txt 2064 1 1
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\TestNVPol_I_Seg2.txt 2064 1 1
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\TestNVPol_I_Seg1.txt 2064 1 1
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\TestNVPol_I_Seg1.txt 2064 1 1

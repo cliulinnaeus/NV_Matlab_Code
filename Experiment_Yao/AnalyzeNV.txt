@@ -1,0 +1,57 @@
+%This is an automated analyzation procedure that runs through all of the
+%typical measurements we should make on an NV. It starts with ESR to find
+%the MW resonance; seeks a user-defined Rabi frequency at that
+%resonance; detunes a user-defined amount from resonance; finds the pi
+%pulse at that detuning; ; measures Ramsey at that detuning; measures Spin
+%Echo at resonance; measures T1. In the future, it may set up and measure
+%CPMG.
+
+global dataParameters fx
+
+% dataParameters.AnalyzeNV.RabiFreq=str2double(handles.AnalyzeNV_RabiFreq.String);
+% dataParameters.AnalyzeNV.PiPulseDetuning=str2double(handles.AnalyzeNV_PiPulseDetuning.String);
+
+%%% ESR %%%
+%You should already know whether a field is applied or not, so this will
+%assume the ESR parameters in the ESR edit fields are good.
+ESR(hObject, eventdata, handles)
+%Extract the fit resonance frequency
+resFreq=fx(2);
+
+%Set the MW frequency to resonance
+handles.MW_Freq.String = num2str(resFreq);
+
+%%% Rabi %%%
+%Run Rabi while varying I and Q voltages. Fit linearly to calibrate Rabi vs
+%voltage and set the voltage  to produce the desired Rabi.
+
+%Use Sweep_Parameters function
+handles.Sweep_Parameters_Start.String=0.002; 
+handles.Sweep_Parameters_End.String=1;
+handles.Sweep_Parameters_Step.String=0.05 ;
+
+
+%Search for 'Rabi' in the Sweep_Parameters string cell, rather than guess its
+%position, in case the string order changes in the future.
+swpCell=handles.Sweep_Parameters_Seq.String;
+ind=find(strcmp(swpCell,'Rabi'));
+%Set the handle's value to the proper index
+handles.Sweep_Parameters_Seq.Value=ind;
+
+%Start by sweeping I
+swpCell=handles.Sweep_Parameters_String.String;
+ind=find(strcmp(swpCell,'Voltage_I'));
+%Set the handle's value to the proper index
+handles.Sweep_Parameters_String.Value=ind;
+%Run
+Sweep_Parameters(hObject, eventdata, handles)
+
+%%%%%%%%%%%%%%%%%FIT%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Sweeping Q
+swpCell=handles.Sweep_Parameters_String.String;
+ind=find(strcmp(swpCell,'Voltage_Q'));
+%Set the handle's value to the proper index
+handles.Sweep_Parameters_String.Value=ind;
+%Run
+Sweep_Parameters(hObject, eventdata, handles)

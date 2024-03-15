@@ -1,0 +1,2 @@
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\SeqGN_Q_seg1.txt 432176 1 1
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\SeqGN_Q_seg2.txt 432176 1 1

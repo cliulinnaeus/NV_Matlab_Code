@@ -1,0 +1,2 @@
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\DEER_XY8N_Q_seg1.txt 681680 1 1
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\DEER_XY8N_Q_seg1.txt 681680 1 1

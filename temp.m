@@ -1,0 +1,72 @@
+WaveForm_1I = zeros(2 + 60*gmSEQ.m, 5);
+WaveForm_1I(1, :) = [0 gmSEQ.interval/2 gSG.AWGFreq 0 0];
+for i = 1:gmSEQ.m    
+    WaveForm_1I(1 + (i-1)*60 + 1, :) = [gmSEQ.interval/2+(i-1+0/48)*Cycle gmSEQ.interval/2+(i-1+0/48)*Cycle+gmSEQ.pi gSG.AWGFreq 0 gSG.piAWGAmp]; % pi_x
+    WaveForm_1I(1 + (i-1)*60 + 2, :) = [gmSEQ.interval/2+(i-1+1/48)*Cycle gmSEQ.interval/2+(i-1+1/48)*Cycle+gmSEQ.pi/2 gSG.AWGFreq 0 gSG.compAWGAmp]; % pi/2_x
+    WaveForm_1I(1 + (i-1)*60 + 3, :) = [gmSEQ.interval/2+(i-1+1/48)*Cycle+gmSEQ.pi/2+PulseGap gmSEQ.interval/2+(i-1+1/48)*Cycle+PulseGap+gmSEQ.pi gSG.AWGFreq 3*pi/2 gSG.compAWGAmp]; % -pi/2_y
+    WaveForm_1I(1 + (i-1)*60 + 4, :) = [gmSEQ.interval/2+(i-1+2/48)*Cycle gmSEQ.interval/2+(i-1+2/48)*Cycle+gmSEQ.pi gSG.AWGFreq pi gSG.piAWGAmp]; % -pi_x
+    WaveForm_1I(1 + (i-1)*60 + 5, :) = [gmSEQ.interval/2+(i-1+3/48)*Cycle gmSEQ.interval/2+(i-1+3/48)*Cycle+gmSEQ.pi gSG.AWGFreq pi gSG.piAWGAmp]; % -pi_x
+    WaveForm_1I(1 + (i-1)*60 + 6, :) = [gmSEQ.interval/2+(i-1+4/48)*Cycle gmSEQ.interval/2+(i-1+4/48)*Cycle+gmSEQ.pi gSG.AWGFreq 0 gSG.piAWGAmp]; % pi_x
+    WaveForm_1I(1 + (i-1)*60 + 7, :) = [gmSEQ.interval/2+(i-1+5/48)*Cycle gmSEQ.interval/2+(i-1+5/48)*Cycle+gmSEQ.pi/2 gSG.AWGFreq 0 gSG.compAWGAmp]; % pi/2_x
+    WaveForm_1I(1 + (i-1)*60 + 8, :) = [gmSEQ.interval/2+(i-1+5/48)*Cycle+gmSEQ.pi/2+PulseGap gmSEQ.interval/2+(i-1+5/48)*Cycle+PulseGap+gmSEQ.pi gSG.AWGFreq 3*pi/2 gSG.compAWGAmp]; % -pi/2_y
+    WaveForm_1I(1 + (i-1)*60 + 9, :) = [gmSEQ.interval/2+(i-1+6/48)*Cycle gmSEQ.interval/2+(i-1+6/48)*Cycle+gmSEQ.pi gSG.AWGFreq pi gSG.piAWGAmp]; % -pi_x
+    WaveForm_1I(1 + (i-1)*60 + 10, :) = [gmSEQ.interval/2+(i-1+7/48)*Cycle gmSEQ.interval/2+(i-1+7/48)*Cycle+gmSEQ.pi gSG.AWGFreq pi gSG.piAWGAmp]; % -pi_x
+    WaveForm_1I(1 + (i-1)*60 + 11, :) = [gmSEQ.interval/2+(i-1+8/48)*Cycle gmSEQ.interval/2+(i-1+8/48)*Cycle+gmSEQ.pi gSG.AWGFreq 2 gSG.piAWGAmp]; % pi_x
+    WaveForm_1I(1 + (i-1)*60 + 12, :) = [gmSEQ.interval/2+(i-1+9/48)*Cycle gmSEQ.interval/2+(i-1+9/48)*Cycle+gmSEQ.pi/2 gSG.AWGFreq 0 gSG.compAWGAmp]; % pi/2_x
+    WaveForm_1I(1 + (i-1)*60 + 13, :) = [gmSEQ.interval/2+(i-1+9/48)*Cycle+gmSEQ.pi/2+PulseGap gmSEQ.interval/2+(i-1+9/48)*Cycle+PulseGap+gmSEQ.pi gSG.AWGFreq 3*pi/2 gSG.compAWGAmp]; % -pi/2_y
+    WaveForm_1I(1 + (i-1)*60 + 14, :) = [gmSEQ.interval/2+(i-1+10/48)*Cycle gmSEQ.interval/2+(i-1+10/48)*Cycle+gmSEQ.pi gSG.AWGFreq pi gSG.piAWGAmp]; % -pi_x
+    WaveForm_1I(1 + (i-1)*60 + 15, :) = [gmSEQ.interval/2+(i-1+11/48)*Cycle gmSEQ.interval/2+(i-1+11/48)*Cycle+gmSEQ.pi gSG.AWGFreq pi gSG.piAWGAmp]; % -pi_x
+    WaveForm_1I(1 + (i-1)*60 + 16, :) = [gmSEQ.interval/2+(i-1+12/48)*Cycle gmSEQ.interval/2+(i-1+12/48)*Cycle+gmSEQ.pi gSG.AWGFreq 3*pi/2 gSG.piAWGAmp]; % -pi_y
+    WaveForm_1I(1 + (i-1)*60 + 17, :) = [gmSEQ.interval/2+(i-1+13/48)*Cycle gmSEQ.interval/2+(i-1+13/48)*Cycle+gmSEQ.pi/2 gSG.AWGFreq 3*pi/2 gSG.compAWGAmp]; % -pi/2_y
+    WaveForm_1I(1 + (i-1)*60 + 18, :) = [gmSEQ.interval/2+(i-1+13/48)*Cycle+gmSEQ.pi/2+PulseGap gmSEQ.interval/2+(i-1+13/48)*Cycle+PulseGap+gmSEQ.pi gSG.AWGFreq 0 gSG.compAWGAmp]; % pi/2_x
+    WaveForm_1I(1 + (i-1)*60 + 19, :) = [gmSEQ.interval/2+(i-1+14/48)*Cycle gmSEQ.interval/2+(i-1+14/48)*Cycle+gmSEQ.pi gSG.AWGFreq pi/2 gSG.piAWGAmp]; % pi_y
+    WaveForm_1I(1 + (i-1)*60 + 20, :) = [gmSEQ.interval/2+(i-1+15/48)*Cycle gmSEQ.interval/2+(i-1+15/48)*Cycle+gmSEQ.pi gSG.AWGFreq pi/2 gSG.piAWGAmp]; % pi_y
+    WaveForm_1I(1 + (i-1)*60 + 21, :) = [gmSEQ.interval/2+(i-1+16/48)*Cycle gmSEQ.interval/2+(i-1+16/48)*Cycle+gmSEQ.pi gSG.AWGFreq 3*pi/2 gSG.piAWGAmp]; % -pi_y
+    WaveForm_1I(1 + (i-1)*60 + 22, :) = [gmSEQ.interval/2+(i-1+17/48)*Cycle gmSEQ.interval/2+(i-1+17/48)*Cycle+gmSEQ.pi/2 gSG.AWGFreq 3*pi/2 gSG.compAWGAmp]; % -pi/2_y
+    WaveForm_1I(1 + (i-1)*60 + 23, :) = [gmSEQ.interval/2+(i-1+17/48)*Cycle+gmSEQ.pi/2+PulseGap gmSEQ.interval/2+(i-1+17/48)*Cycle+PulseGap+gmSEQ.pi gSG.AWGFreq 0 gSG.compAWGAmp]; % pi/2_x
+    WaveForm_1I(1 + (i-1)*60 + 24, :) = [gmSEQ.interval/2+(i-1+18/48)*Cycle gmSEQ.interval/2+(i-1+18/48)*Cycle+gmSEQ.pi gSG.AWGFreq pi/2 gSG.piAWGAmp]; % pi_y
+    WaveForm_1I(1 + (i-1)*60 + 25, :) = [gmSEQ.interval/2+(i-1+19/48)*Cycle gmSEQ.interval/2+(i-1+19/48)*Cycle+gmSEQ.pi gSG.AWGFreq pi/2 gSG.piAWGAmp]; % pi_y
+    WaveForm_1I(1 + (i-1)*60 + 26, :) = [gmSEQ.interval/2+(i-1+20/48)*Cycle gmSEQ.interval/2+(i-1+20/48)*Cycle+gmSEQ.pi gSG.AWGFreq 3*pi/2 gSG.piAWGAmp]; % -pi_y
+    WaveForm_1I(1 + (i-1)*60 + 27, :) = [gmSEQ.interval/2+(i-1+21/48)*Cycle gmSEQ.interval/2+(i-1+21/48)*Cycle+gmSEQ.pi/2 gSG.AWGFreq 3*pi/2 gSG.compAWGAmp]; % -pi/2_y
+    WaveForm_1I(1 + (i-1)*60 + 28, :) = [gmSEQ.interval/2+(i-1+21/48)*Cycle+gmSEQ.pi/2+PulseGap gmSEQ.interval/2+(i-1+21/48)*Cycle+PulseGap+gmSEQ.pi gSG.AWGFreq 0 gSG.compAWGAmp]; % pi/2_x
+    WaveForm_1I(1 + (i-1)*60 + 29, :) = [gmSEQ.interval/2+(i-1+22/48)*Cycle gmSEQ.interval/2+(i-1+22/48)*Cycle+gmSEQ.pi gSG.AWGFreq pi/2 gSG.piAWGAmp]; % pi_y
+    WaveForm_1I(1 + (i-1)*60 + 30, :) = [gmSEQ.interval/2+(i-1+23/48)*Cycle gmSEQ.interval/2+(i-1+23/48)*Cycle+gmSEQ.pi gSG.AWGFreq pi/2 gSG.piAWGAmp]; % pi_y
+    WaveForm_1I(1 + (i-1)*60 + 31, :) = [gmSEQ.interval/2+(i-1+24/48)*Cycle gmSEQ.interval/2+(i-1+24/48)*Cycle+gmSEQ.pi gSG.AWGFreq 3*pi/2 gSG.piAWGAmp]; % -pi_y
+    WaveForm_1I(1 + (i-1)*60 + 32, :) = [gmSEQ.interval/2+(i-1+25/48)*Cycle gmSEQ.interval/2+(i-1+25/48)*Cycle+gmSEQ.pi/2 gSG.AWGFreq 0 gSG.compAWGAmp]; % pi/2_x
+    WaveForm_1I(1 + (i-1)*60 + 33, :) = [gmSEQ.interval/2+(i-1+25/48)*Cycle+gmSEQ.pi/2+PulseGap gmSEQ.interval/2+(i-1+25/48)*Cycle+PulseGap+gmSEQ.pi gSG.AWGFreq pi/2 gSG.compAWGAmp]; % pi/2_y
+    WaveForm_1I(1 + (i-1)*60 + 34, :) = [gmSEQ.interval/2+(i-1+26/48)*Cycle gmSEQ.interval/2+(i-1+26/48)*Cycle+gmSEQ.pi gSG.AWGFreq pi/2 gSG.piAWGAmp]; % pi_y
+    WaveForm_1I(1 + (i-1)*60 + 35, :) = [gmSEQ.interval/2+(i-1+27/48)*Cycle gmSEQ.interval/2+(i-1+27/48)*Cycle+gmSEQ.pi gSG.AWGFreq 3*pi/2 gSG.piAWGAmp]; % -pi_y
+    WaveForm_1I(1 + (i-1)*60 + 36, :) = [gmSEQ.interval/2+(i-1+28/48)*Cycle gmSEQ.interval/2+(i-1+28/48)*Cycle+gmSEQ.pi gSG.AWGFreq 3*pi/2 gSG.piAWGAmp]; % -pi_y
+    WaveForm_1I(1 + (i-1)*60 + 37, :) = [gmSEQ.interval/2+(i-1+29/48)*Cycle gmSEQ.interval/2+(i-1+29/48)*Cycle+gmSEQ.pi/2 gSG.AWGFreq 0 gSG.compAWGAmp]; % pi/2_x
+    WaveForm_1I(1 + (i-1)*60 + 38, :) = [gmSEQ.interval/2+(i-1+29/48)*Cycle+gmSEQ.pi/2+PulseGap gmSEQ.interval/2+(i-1+29/48)*Cycle+PulseGap+gmSEQ.pi gSG.AWGFreq pi/2 gSG.compAWGAmp]; % pi/2_y
+    WaveForm_1I(1 + (i-1)*60 + 39, :) = [gmSEQ.interval/2+(i-1+30/48)*Cycle gmSEQ.interval/2+(i-1+30/48)*Cycle+gmSEQ.pi gSG.AWGFreq pi/2 gSG.piAWGAmp]; % pi_y
+    WaveForm_1I(1 + (i-1)*60 + 40, :) = [gmSEQ.interval/2+(i-1+31/48)*Cycle gmSEQ.interval/2+(i-1+31/48)*Cycle+gmSEQ.pi gSG.AWGFreq 3*pi/2 gSG.piAWGAmp]; % -pi_y
+    WaveForm_1I(1 + (i-1)*60 + 41, :) = [gmSEQ.interval/2+(i-1+32/48)*Cycle gmSEQ.interval/2+(i-1+32/48)*Cycle+gmSEQ.pi gSG.AWGFreq 3*pi/2 gSG.piAWGAmp]; % -pi_y
+    WaveForm_1I(1 + (i-1)*60 + 42, :) = [gmSEQ.interval/2+(i-1+33/48)*Cycle gmSEQ.interval/2+(i-1+33/48)*Cycle+gmSEQ.pi/2 gSG.AWGFreq 0 gSG.compAWGAmp]; % pi/2_x
+    WaveForm_1I(1 + (i-1)*60 + 43, :) = [gmSEQ.interval/2+(i-1+33/48)*Cycle+gmSEQ.pi/2+PulseGap gmSEQ.interval/2+(i-1+33/48)*Cycle+PulseGap+gmSEQ.pi gSG.AWGFreq pi/2 gSG.compAWGAmp]; % pi/2_y
+    WaveForm_1I(1 + (i-1)*60 + 44, :) = [gmSEQ.interval/2+(i-1+34/48)*Cycle gmSEQ.interval/2+(i-1+34/48)*Cycle+gmSEQ.pi gSG.AWGFreq pi/2 gSG.piAWGAmp]; % pi_y
+    WaveForm_1I(1 + (i-1)*60 + 45, :) = [gmSEQ.interval/2+(i-1+35/48)*Cycle gmSEQ.interval/2+(i-1+35/48)*Cycle+gmSEQ.pi gSG.AWGFreq pi gSG.piAWGAmp]; % -pi_x
+    WaveForm_1I(1 + (i-1)*60 + 46, :) = [gmSEQ.interval/2+(i-1+36/48)*Cycle gmSEQ.interval/2+(i-1+36/48)*Cycle+gmSEQ.pi gSG.AWGFreq pi gSG.piAWGAmp]; % -pi_x
+    WaveForm_1I(1 + (i-1)*60 + 47, :) = [gmSEQ.interval/2+(i-1+37/48)*Cycle gmSEQ.interval/2+(i-1+37/48)*Cycle+gmSEQ.pi/2 gSG.AWGFreq pi/2 gSG.compAWGAmp]; % pi/2_y
+    WaveForm_1I(1 + (i-1)*60 + 48, :) = [gmSEQ.interval/2+(i-1+37/48)*Cycle+gmSEQ.pi/2+PulseGap gmSEQ.interval/2+(i-1+37/48)*Cycle+PulseGap+gmSEQ.pi gSG.AWGFreq 0 gSG.compAWGAmp]; % pi/2_x
+    WaveForm_1I(1 + (i-1)*60 + 49, :) = [gmSEQ.interval/2+(i-1+38/48)*Cycle gmSEQ.interval/2+(i-1+38/48)*Cycle+gmSEQ.pi gSG.AWGFreq 0 gSG.piAWGAmp]; % pi_x
+    WaveForm_1I(1 + (i-1)*60 + 50, :) = [gmSEQ.interval/2+(i-1+39/48)*Cycle gmSEQ.interval/2+(i-1+39/48)*Cycle+gmSEQ.pi gSG.AWGFreq pi gSG.piAWGAmp]; % -pi_x
+    WaveForm_1I(1 + (i-1)*60 + 51, :) = [gmSEQ.interval/2+(i-1+40/48)*Cycle gmSEQ.interval/2+(i-1+40/48)*Cycle+gmSEQ.pi gSG.AWGFreq pi gSG.piAWGAmp]; % -pi_x
+    WaveForm_1I(1 + (i-1)*60 + 52, :) = [gmSEQ.interval/2+(i-1+41/48)*Cycle gmSEQ.interval/2+(i-1+41/48)*Cycle+gmSEQ.pi/2 gSG.AWGFreq pi/2 gSG.compAWGAmp]; % pi/2_y
+    WaveForm_1I(1 + (i-1)*60 + 53, :) = [gmSEQ.interval/2+(i-1+41/48)*Cycle+gmSEQ.pi/2+PulseGap gmSEQ.interval/2+(i-1+41/48)*Cycle+PulseGap+gmSEQ.pi gSG.AWGFreq 0 gSG.compAWGAmp]; % pi/2_x
+    WaveForm_1I(1 + (i-1)*60 + 54, :) = [gmSEQ.interval/2+(i-1+42/48)*Cycle gmSEQ.interval/2+(i-1+42/48)*Cycle+gmSEQ.pi gSG.AWGFreq 0 gSG.piAWGAmp]; % pi_x
+    WaveForm_1I(1 + (i-1)*60 + 55, :) = [gmSEQ.interval/2+(i-1+43/48)*Cycle gmSEQ.interval/2+(i-1+43/48)*Cycle+gmSEQ.pi gSG.AWGFreq pi gSG.piAWGAmp]; % -pi_x
+    WaveForm_1I(1 + (i-1)*60 + 56, :) = [gmSEQ.interval/2+(i-1+44/48)*Cycle gmSEQ.interval/2+(i-1+44/48)*Cycle+gmSEQ.pi gSG.AWGFreq pi gSG.piAWGAmp]; % -pi_x
+    WaveForm_1I(1 + (i-1)*60 + 57, :) = [gmSEQ.interval/2+(i-1+45/48)*Cycle gmSEQ.interval/2+(i-1+45/48)*Cycle+gmSEQ.pi/2 gSG.AWGFreq pi/2 gSG.compAWGAmp]; % pi/2_y
+    WaveForm_1I(1 + (i-1)*60 + 58, :) = [gmSEQ.interval/2+(i-1+45/48)*Cycle+gmSEQ.pi/2+PulseGap gmSEQ.interval/2+(i-1+45/48)*Cycle+PulseGap+gmSEQ.pi gSG.AWGFreq 0 gSG.compAWGAmp]; % pi/2_x
+    WaveForm_1I(1 + (i-1)*60 + 59, :) = [gmSEQ.interval/2+(i-1+46/48)*Cycle gmSEQ.interval/2+(i-1+46/48)*Cycle+gmSEQ.pi gSG.AWGFreq 0 gSG.piAWGAmp]; % pi_x
+    WaveForm_1I(1 + (i-1)*60 + 60, :) = [gmSEQ.interval/2+(i-1+47/48)*Cycle gmSEQ.interval/2+(i-1+47/48)*Cycle+gmSEQ.pi gSG.AWGFreq 3*pi/2 gSG.piAWGAmp]; % -pi_y
+end
+if gmSEQ.CoolSwitch == 0
+    WaveForm_1I(2 + 60*gmSEQ.m, :) = [gmSEQ.m*Cycle gmSEQ.m*Cycle+gmSEQ.pi  gSG.AWGFreq 0 0]; % z-basis measurement 
+elseif gmSEQ.CoolSwitch == 1 
+    WaveForm_1I(2 + 60*gmSEQ.m, :) = [gmSEQ.m*Cycle gmSEQ.m*Cycle+gmSEQ.halfpi  gSG.AWGFreq 0 gSG.halfpiAWGAmp]; % x-basis measurement 
+else
+    WaveForm_1I(2 + 60*gmSEQ.m, :) = [gmSEQ.m*Cycle gmSEQ.m*Cycle+gmSEQ.halfpi  gSG.AWGFreq pi/2 gSG.halfpiAWGAmp]; % y-basis measurement
+end
+disp("upgraded2")

@@ -1,0 +1,2 @@
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\WAHUHAN_Q_seg1.txt 19184 1 1
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\WAHUHAN_Q_seg2.txt 19184 1 1

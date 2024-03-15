@@ -1,0 +1,7 @@
+The PulseBlaster GUI is a simple and powerful interface for Spincore Technologies, Inc. PulseBlaster™. 
+
+This version is compatible with 64-bit operating systems. Updated 20150317 by Spincore Technologies, Inc.
+
+NOTE: This software is unsupported and is provided "AS IS" with no warranty, express or implied.
+
+For more information, visit http://www.spincore.com/support/PulseBlasterMatlabGUI/pbmgui_main.shtml or contact us at http://www.spincore.com/contact.shtml.

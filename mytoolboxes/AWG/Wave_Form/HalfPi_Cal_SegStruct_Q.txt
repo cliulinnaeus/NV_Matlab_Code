@@ -1,0 +1,2 @@
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\HalfPi_Cal_Q_seg1.txt 3808 1 1
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\HalfPi_Cal_Q_seg2.txt 3808 1 1

@@ -1,0 +1,4 @@
+The files in this directory are provided with "as-is" for use with a Windows 
+C++ compiler that does not have capability of staticly linking directly to DLL.
+
+If this does not work you can perform a dynamic load of the DLL (OS does all the work) or use the Script API (see manual).

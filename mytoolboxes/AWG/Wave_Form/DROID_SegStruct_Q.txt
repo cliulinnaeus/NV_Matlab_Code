@@ -1,0 +1,2 @@
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\DROID_Q_seg1.txt 43536 1 1
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\DROID_Q_seg2.txt 43536 1 1

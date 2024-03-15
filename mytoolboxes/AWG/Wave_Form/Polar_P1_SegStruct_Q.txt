@@ -1,0 +1,5 @@
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\PolarP1_Q_seg3P.txt 2112 1 1
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\PolarP1_Q_seg3P.txt 2112 2 1
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\PolarP1_Q_seg2P.txt 102224 1 1
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\PolarP1_Q_seg2P.txt 102224 19 1
+C:\MATLAB_Code\mytoolboxes\AWG\Wave_Form\PolarP1_Q_seg1P.txt 2224 1 1
