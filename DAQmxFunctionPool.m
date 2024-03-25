@@ -44,7 +44,7 @@ bytesPerSamp = 0;
 % DAQmx Configure Code
 [ status, ~, task ] = DAQmxCreateTask([]);
 DAQmxErr(status);
-DAQmxErr(DAQmxCreateDIChan(task,'Dev2/port0/line0:7','',DAQmx_Val_ChanForAllLines));
+DAQmxErr(DAQmxCreateDIChan(task,'Dev1/port0/line0:7','',DAQmx_Val_ChanForAllLines));
 % DAQmx Start Code
 DAQmxErr(DAQmxStartTask(task));
 % DAQmx Read Code
@@ -280,49 +280,6 @@ status = DAQmxCfgSampClkTiming(task,PortMap('Ctr Gate'),max_freq,...
     DAQmx_Val_Rising,DAQmx_Val_ContSamps ,N);
 DAQmxErr(status);
 
-function [status, task] = SetGatedNCounter_not_in_use(N)
-%added by Satcher 12/2/2016
-DAQmx_Val_Volts= 10348; % measure volts
-DAQmx_Val_Rising = 10280; % Rising
-DAQmx_Val_Falling =10171; % Falling
-DAQmx_Val_FiniteSamps = 10178; % Finite Samples
-DAQmx_Val_CountUp = 10128; % Count Up
-DAQmx_Val_CountDown = 10124; % Count Down
-DAQmx_Val_GroupByChannel = 0; % Group per channel
-DAQmx_Val_ContSamps =10123; % Continuous Samples
-DAQmx_Val_SampClkPeriods = 10286; % Sample Clock Periods
-DAQmx_Val_Seconds =10364; % Seconds
-DAQmx_Val_Ticks =10304; % Ticks
-DAQmx_Val_DigLvl = 10152;
-DAQmx_Val_Low=10214;
-
-[ status, ~, task ] = DAQmxCreateTask([]);
-DAQmxErr(status);
-status = DAQmxCreateCICountEdgesChan(task,PortMap('Ctr in'),'',...
-    DAQmx_Val_Rising , 0, DAQmx_Val_CountUp);
-DAQmxErr(status);
-status = calllib('mynidaqmx','DAQmxSetCICountEdgesTerm',...
-    task, PortMap('Ctr in'), PortMap('Ctr src')); 
-DAQmxErr(status);
-
-status = calllib('mynidaqmx','DAQmxSetPauseTrigType',...
-    task,DAQmx_Val_DigLvl); 
-DAQmxErr(status);
-
-status = calllib('mynidaqmx','DAQmxSetDigLvlPauseTrigSrc',...
-    task, PortMap('Ctr Gate')); 
-DAQmxErr(status);
-
-status = calllib('mynidaqmx','DAQmxSetDigLvlPauseTrigWhen',...
-    task, DAQmx_Val_Low);
-DAQmxErr(status);
-
-max_freq=1e7;
-
-status = DAQmxCfgSampClkTiming(task,PortMap('Ctr Gate'),max_freq,...
-    DAQmx_Val_Rising,DAQmx_Val_ContSamps ,N);
-DAQmxErr(status);
-
 function [data, status] = ReadCounterScalar(task)
 % added by Satcher 10/19/2016
 global gTimeOut
@@ -365,7 +322,7 @@ DAQmx_Val_FiniteSamps = 10178; % Finite Samples
 
 DAQmxErr(status);
 
-status = DAQmxCreateAIVoltageChan(hRead,PortMap('APD in'),'',...
+status = DAQmxCreateAIVoltageChan(hRead,PortMap('PD in'),'',...
     DAQmx_Val_diff, -5,5, DAQmx_Val_Volts,[]);
 
 DAQmxErr(status);

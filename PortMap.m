@@ -6,45 +6,49 @@ switch what
     case 'BackupImageFile'
         path='C:\MATLAB_Code\Data\TempDataBackup\TempImage.mat';
     case 'Ctr Gate'
-        path='/Dev2/PFI1';
+        path='/Dev1/PFI1';       
+    case 'PD Gate'
+        path='/Dev1/PFI3';
     case 'SG ext mod'
-        path='Dev2/ao2';
+        path='Dev1/ao2';
     case 'Ctr Trig'
-        path='/Dev2/PFI13';
+        path='/Dev1/PFI13';
     case 'SG com'
-        path='com34';
+        path='com6';
     case 'SG com 2'
         path='com8';
     case 'SG com 3'
         path='com10';
     case 'meas'
-        path='SPCM'; 
+        path='SPCM';
+    case 'meas2'
+        path='PD'; 
     case 'SPCM' 
-        path='/Dev2/PFI0';
+        path='/Dev1/PFI0';
     case 'gConfocal path'
         path='C:\MATLAB_Code\Sets\';
-    case 'APD in'
-        path='Dev2/ai0';
+    case 'PD in'
+        path='Dev1/ai0';
     case 'Ctr in'
-        path='Dev2/ctr3';
+        path='Dev1/ctr3';
     case 'Ctr out'
-        path='Dev2/ctr1';
+        path='Dev1/ctr1';
     case 'Galvo x'
-        path='Dev2/ao0';
+        path='Dev1/ao0';
     case 'Galvo y'
-        path='Dev2/ao1';
+        path='Dev1/ao1';
     case 'Piezo' % added by Weijie 09/21/2021 single-NV
         path='0117068258';
     case 'spinapi'
-        path='C:\SpinCore\SpinAPI\include\spinapi.h';
+        path='C:\Program Files\SpinAPI\include\spinapi.h';
     case 'pulseblaster'
-        path='C:\SpinCore\SpinAPI\include\pulseblaster.h';
+        path='C:\Program Files\SpinAPI\include\pulseblaster.h';
     case 'dds'
-        path='C:\SpinCore\SpinAPI\include\dds.h';
+        path='C:\Program Files\SpinAPI\include\dds.h';
     case 'Data'
-        path='C:\Data\';
+        path='D:\Data\';
     case 'Ctr src'  % SPCM 
-        path='/Dev2/PFI0';
+        path='/Dev1/PFI0';
 %         path='/Dev2/PFI2'; %PB4 bit
     case 'LF save'
         path='C:\Users\rt2\Documents\LightField\';

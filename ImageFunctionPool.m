@@ -756,6 +756,7 @@ ReadStartingFile(handles);
 set(handles.XOffSet,'String',gConfocal.XOffSet);
 set(handles.YOffSet,'String',gConfocal.YOffSet);
 gmSEQ.meas=PortMap('meas');
+gmSEQ.meas2=PortMap('meas2');
 
 % %AWG Initialize of AWG
 % % 1st AWG is for MW control
@@ -1162,7 +1163,7 @@ plot(handles.axes1,V);
 Freq = 1/Scan.FixDT;
 TimeOut = Scan.FixDT * Scan.NVz * 2;
 
-status = DAQmxResetDevice('Dev2');
+status = DAQmxResetDevice('Dev1');
 disp(['NI: Reset Devie          :' num2str(status)]);
 
 [status, hPulse] = DigPulseTrainCont(Freq,0.5,10000);
@@ -2598,7 +2599,7 @@ bGo = true;
 
 NRead = 2;
 
-DT = 0.01;
+DT = str2num(handles.CPS_DT.String);
 TimeOut = DT * NRead * 1.1;
 Freq = 1/DT;
 
@@ -2612,13 +2613,13 @@ try
     hCPS.hCounter = hCounter;
     hCPS.hPulse = hPulse;
     
-    %haopu added to make live cps plot
+    if handles.checkbox_cps_show_trace.Value
     figure();%
     h = animatedline;%
     numpoints = 10000;%
     x = linspace(1,10000,numpoints)*DT*NRead;%
-    k=1;%
-    %%%%%
+    k=1;
+    end
     
     while bGo
         
@@ -2635,10 +2636,11 @@ try
         A=ProcessDataVector(A,1);
         CPS = ProcessDataCPS(A, NRead, DT);
         set(handles.CPS,'String',CPS);
-        %haopu added to make live cps plot
+        
+        if handles.checkbox_cps_show_trace.Value
         addpoints(h,x(k),CPS)%
         k=k+1;%
-        %%%%%%%
+        end
         
         drawnow;
     end

@@ -1,6 +1,0 @@
-function [status] = DAQmxConnectTerms(strSourceTerminal,...
-    strDestinationTerminal, signalModifiers);
-
-
-[status] = calllib('mynidaqmx','DAQmxConnectTerms',strSourceTerminal,...
-    strDestinationTerminal, signalModifiers);

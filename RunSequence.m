@@ -50,6 +50,10 @@ if gSG.bfixedPow && gSG.bfixedFreq
     
     try
         [~, hCounter] = SetNCounters(1*gmSEQ.ctrN*gmSEQ.Repeat,PortMap('Ctr Gate'),500000);
+        if strcmp(gmSEQ.meas2,'PD')
+            %[~, hCounterPD] = SetPDCounters(1*gmSEQ.ctrN*gmSEQ.Repeat,PortMap('PD Gate'),500000);
+        end
+        
         for i=1:gmSEQ.Average
             gmSEQ.iAverage=i;
             handles.biAverage.String=num2str(gmSEQ.iAverage);
@@ -116,7 +120,7 @@ if gSG.bfixedPow && gSG.bfixedFreq
                     DAQmxStopTask(hCounter);
 %                     vec = [0 0 0];
                     sigDatum = ProcessData(vec);
-                    raw_vec{i,j} = vec;
+                    %raw_vec{i,j} = vec;
                     for k = 1:gmSEQ.ctrN
                         gmSEQ.signal_Ave(k, j) = sigDatum(k);
                         if i == 1
@@ -236,7 +240,7 @@ elseif isfield(gmSEQ,'bLiO')   % activates for ESR
     if ~gmSEQ.bTrack
         ExperimentFunctionPool('PBOFF',hObject, eventdata, handles);
     end
-    
+    gSG.bOn=0; SignalGeneratorFunctionPool('RFOnOff');
     
 elseif gSG.bfixedPow && ~gSG.bfixedFreq % for ODMR
     CreateSavePath_Ave()
@@ -485,6 +489,15 @@ elseif strcmp(gmSEQ.meas,'APD')
 end
 hCPS.hCounter=task;
 
+function [status, task] = SetPDCounters(varargin)
+%varargin(1) is the number of total samples
+%varargin(2) is the source of gating
+%varargin(3) is the frequency of the gating to expect
+% Initialize DAQ
+global gmSEQ hCPS
+[status, task] = DAQmxFunctionPool('CreateAIChannel',varargin{2},varargin{1},varargin{3});
+hCPS.hCounter=task;
+
 function PlotData(handles,raw_j)
 global gmSEQ
 %axes(handles.axes2); %cla;
@@ -542,6 +555,7 @@ if ~isfield(gmSEQ,'bLiO')&&gmSEQ.ctrN~=1 % Do not plot ESR
                 data=signal(1,:)-signal(2,:)./signal(3,:);
             else
                 data=signal(1,:);
+                data_err = zeros(size(data));
                 % data=signal(1,:)-signal(3,:)./(signal(2,:)-signal(4,:));
             end
         elseif gmSEQ.ctrN==2
@@ -575,7 +589,7 @@ if ~isfield(gmSEQ,'bLiO')&&gmSEQ.ctrN~=1 % Do not plot ESR
                 sig_err2 = 1./sqrt(gmSEQ.iAverage * sig2); % Relative error of signal
                 rel_err2 = sqrt(ref_err2.^2 + sig_err2.^2);
                 data_err2 = rel_err2 .* data2;
-            elseif strcmp(gmSEQ.name,'T1_Rb_S00_S01_Rd')
+            elseif strcmp(gmSEQ.name,'T1_Rb_S00_S01_Rd')||strcmp(gmSEQ.name,'T1_Rb_S00_S01_Rd_newRef')
                 % data = (gmSEQ.reference(~isnan(gmSEQ.reference))-gmSEQ.reference3(~isnan(gmSEQ.reference3)))./(gmSEQ.signal(~isnan(gmSEQ.signal))+gmSEQ.reference2(~isnan(gmSEQ.reference2)))*2;
                 ref_B = signal(1,:);
                 ref_D = signal(4,:);
@@ -592,6 +606,10 @@ if ~isfield(gmSEQ,'bLiO')&&gmSEQ.ctrN~=1 % Do not plot ESR
                 
                 [data, data_err] = ContrastDiff(ref_B, ref_D,sig_B, sig_D, gmSEQ.iAverage);
             end
+            
+        else
+            data = zeros(size(signal(1,:)));
+            data_err = data;
         end
         % plot(handles.axes3, gmSEQ.SweepParam(1:length(data)).*ScaleT,data,'-g')
         if strcmp(gmSEQ.name,'Elec_Pol_Extract')|| strcmp(gmSEQ.name,'Rabi_fix_MWDutyCycle')
@@ -841,7 +859,7 @@ elseif strcmp(gmSEQ.meas,'APD')
     else
         sigDatum = NaN(1, gmSEQ.ctrN);
         for i = 1:gmSEQ.ctrN
-            sigDatum(i)=sum(RawData(i:gmSEQ.ctrN:end));
+            sigDatum(i)=sum(RawData(i:gmSEQ.ctrN:end))/(length(RawData)/gmSEQ.ctrN);
         end
     end
     

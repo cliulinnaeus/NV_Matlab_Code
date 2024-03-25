@@ -22,7 +22,7 @@ function varargout = ImageNVC(varargin)
 
 % Edit the above text to modify the response to help ImageNVC
 
-% Last Modified by GUIDE v2.5 21-Sep-2021 22:20:14
+% Last Modified by GUIDE v2.5 20-Mar-2024 08:44:25
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -2863,3 +2863,43 @@ function ImageNVCGUI_DeleteFcn(hObject, eventdata, handles)
 % gPiezo.Controller.Destroy;
 % clear gPiezo.Controller;
 % clear gPiezo.PIdevice;
+
+
+% --- Executes on button press in pushbutton_Experiment_PB_DAQ.
+function pushbutton_Experiment_PB_DAQ_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_Experiment_PB_DAQ (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+Experiment_PB_DAQ
+
+
+% --- Executes on button press in checkbox_cps_show_trace.
+function checkbox_cps_show_trace_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_cps_show_trace (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_cps_show_trace
+
+
+
+function CPS_DT_Callback(hObject, eventdata, handles)
+% hObject    handle to CPS_DT (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of CPS_DT as text
+%        str2double(get(hObject,'String')) returns contents of CPS_DT as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function CPS_DT_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to CPS_DT (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
