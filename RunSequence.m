@@ -401,10 +401,10 @@ end
 
 % Customized in the input data here
 % DEER ODMR Weijie 04/19/2022
-gmSEQ.bCust = 0;
+gmSEQ.bCust = 1;
 if gmSEQ.bCust
     % gmSEQ.SweepParam = [linspace(0.900,0.928, 15), linspace(0.930,0.969,40), linspace(0.970, 1.018, 25), linspace(1.020, 1.069, 51),  linspace(1.070, 1.100, 16)];
-    gmSEQ.SweepParam = [0 0 0 linspace(0, 500, 51)];
+    gmSEQ.SweepParam = [linspace(1e4, 2e6, 11), linspace(3e6, 15e6, 13)];
     % gmSEQ.SweepParam = [linspace(50, 20050, 5), linspace(40000, 100000, 4), linspace(150000, 400000, 6), linspace(500000, 800000, 4)];
     % Seq F 100 ns
     % gmSEQ.SweepParam = [linspace(0, 20, 6), linspace(30, 60, 4), linspace(80, 200, 7), linspace(240, 400, 5)];

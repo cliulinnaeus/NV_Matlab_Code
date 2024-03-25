@@ -51,8 +51,8 @@ switch varargin{1}
         T1_Rb_S00_S01_Rd();
     case 'T1_Rb_S00_S01_Rd_newRef'
         T1_Rb_S00_S01_Rd_newRef();
-    case 'T1_S00_S01_S11_S10'
-        T1_S00_S01_S11_S10();
+    case 'T1_S00_S01_S10_S11'
+        T1_S00_S01_S10_S11();
     case 'T1_S00_R0_S01_R1_fixDutyCycle'
         T1_S00_R0_S01_R1_fixDutyCycle();
     case 'ODMR'
@@ -104,7 +104,7 @@ StrL{numel(StrL)+1}='T1_S00_S01';
 StrL{numel(StrL)+1}='T1_Rb_S00_S01_Rd';
 StrL{numel(StrL)+1}='T1_Rb_S00_S01_Rd_newRef';
 StrL{numel(StrL)+1}='T1_S00_R0_S01_R1_fixDutyCycle';
-StrL{numel(StrL)+1}='T1_S00_S01_S11_S10';
+StrL{numel(StrL)+1}='T1_S00_S01_S10_S11';
 StrL{numel(StrL)+1}='CtrDur';
 StrL{numel(StrL)+1}='CtrDelay';
 
@@ -1205,7 +1205,7 @@ gmSEQ.CHN(numel(gmSEQ.CHN)).DT=[20 20];
 
 ApplyDelays();
 
-function T1_S00_S01_S11_S10()
+function T1_S00_S01_S10_S11()
 global gmSEQ gSG
 gSG.bfixedPow=1;
 gSG.bfixedFreq=1;
@@ -1217,48 +1217,48 @@ gSG.bModSrc='External';
 if strcmp(gmSEQ.meas,'APD')
     gmSEQ.CtrGateDur = 1000;
 end
+p = gmSEQ.pi;
 d = 10000; %AfterLaser
 u = 10000; %AfterPulse
-w = 1e6; %initial wait
+w = d+p+u; %initial wait
 i = gmSEQ.readout; 
 r = gmSEQ.CtrGateDur;
-re = 100; %extra laser on time for readout
+re = 0; %extra laser on time for readout
 rl = r+re; %total laser on time for readout
-p = gmSEQ.pi;
 m = gmSEQ.m;
 to = gmSEQ.To;
 
 %%%%% Variable sequence length%%%%%%
 
 gmSEQ.CHN(1).PBN=PBDictionary('ctr0');
-gmSEQ.CHN(1).NRise=5;
-T=[w+i+d,d+m+u+re,w+i+d,re+d+m+u+re,w+i+d+p+u+re];
-DT=[r,r,r,r,r];
+gmSEQ.CHN(1).NRise=8;
+T=[w+i+d+p+u,d+p+u+m,w+i+d+p+u,d+p+u+m,w+i+d+p+u,d+p+u+m,w+i+d+p+u,d+p+u+m];
+DT=[r,r,r,r,r,r,r,r];
 ConstructSeq(T,DT)
 
 gmSEQ.CHN(numel(gmSEQ.CHN)+1).PBN=PBDictionary('AOM');
-gmSEQ.CHN(numel(gmSEQ.CHN)).NRise=8;
-T=[w,d,d+m+u,w,d,d+m+u,w,d+p+u];
-DT=[i,rl,rl,i,rl,rl,i,rl];
+gmSEQ.CHN(numel(gmSEQ.CHN)).NRise=10;
+T=[w,d+p+u,d+p+u+m,w,d+p+u,d+p+u+m,w,d+p+u+r+d+p+u+m,w,d+p+u+r+d+p+u+m];
+DT=[i,r,r,i,r,r,i,r,i,r];
 ConstructSeq(T,DT)
 
 gmSEQ.CHN(numel(gmSEQ.CHN)+1).PBN=PBDictionary('MWSwitch');
-gmSEQ.CHN(numel(gmSEQ.CHN)).NRise=2;
-T=[(w+i+d+rl+d+m+u)*2+rl-u-p,u+rl+w+i+d];
-DT=[p,p];
+gmSEQ.CHN(numel(gmSEQ.CHN)).NRise=4;
+T=[(w+i+(p+d+u+r)*2+m)*2-r-u-p,u+r+w+i+d,u+r+d+p+u+m+r+w+i+d,u+r+d+m];
+DT=[p,p,p,p];
 ConstructSeq(T,DT)
 
-if strcmp(gmSEQ.meas2,'PD')
-    gmSEQ.CHN(numel(gmSEQ.CHN)+1).PBN=PBDictionary('PD');
-    gmSEQ.CHN(numel(gmSEQ.CHN)).NRise=5;
-    T=[w+i+d,d+m+u+re,w+i+d,re+d+m+u+re,w+i+d+p+u+re];
-    DT=[r,r,r,r,r];
-    ConstructSeq(T,DT)
-end
+% if strcmp(gmSEQ.meas2,'PD')
+%     gmSEQ.CHN(numel(gmSEQ.CHN)+1).PBN=PBDictionary('PD');
+%     gmSEQ.CHN(numel(gmSEQ.CHN)).NRise=5;
+%     T=[w+i+d,d+m+u,w+i+d,d+m+u,w+i+d+p+u];
+%     DT=[r,r,r,r,r];
+%     ConstructSeq(T,DT)
+% end
 
 gmSEQ.CHN(numel(gmSEQ.CHN)+1).PBN=PBDictionary('dummy1');
 gmSEQ.CHN(numel(gmSEQ.CHN)).NRise=2;
-T=[0 (w+i+d+r+100+d+m+u+rl)*2+p+rl+w+i+d];
+T=[0 (w+i+(p+d+u+r)*2+m)*4];
 DT=[20 20];
 ConstructSeq(T,DT)
 

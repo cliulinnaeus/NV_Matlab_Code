@@ -122,6 +122,7 @@ clear StrL;
 
 LoadUserInputs(hObject,eventdata,handles);
 SequencePool(string(gmSEQ.name));
+
 DrawSequence(gmSEQ, hObject, eventdata, ax);
 
 debug = false;
