@@ -22,7 +22,7 @@ function varargout = ImageNVC(varargin)
 
 % Edit the above text to modify the response to help ImageNVC
 
-% Last Modified by GUIDE v2.5 20-Mar-2024 08:44:25
+% Last Modified by GUIDE v2.5 24-Sep-2024 16:04:53
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -1086,8 +1086,8 @@ function Track_Callback(hObject, eventdata, handles)
 
 numTrack = 0;
 while numTrack < eval(get(handles.TrackTimes,'String'))
+ImageFunctionPool('TrackZ',hObject, eventdata, handles);
 ImageFunctionPool('TrackImageCorr',hObject, eventdata, handles);
-% ImageFunctionPool('Track',hObject, eventdata, handles);
 numTrack = numTrack + 1;
 disp([num2str(numTrack) ' / ' num2str(eval(get(handles.TrackTimes,'String'))) ' trials completed']);
 pause(1);
@@ -2858,8 +2858,10 @@ function ImageNVCGUI_DeleteFcn(hObject, eventdata, handles)
 % hObject    handle to ImageNVCGUI (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-%global gPiezo
-%disp("Deleting the piezo controller.")
+global gPiezo
+disp("Disconnecting the piezo controller.")
+piezoPFM450FunctionPool('disconnect');
+pause(5);
 % gPiezo.Controller.Destroy;
 % clear gPiezo.Controller;
 % clear gPiezo.PIdevice;
@@ -2903,3 +2905,29 @@ function CPS_DT_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- If Enable == 'on', executes on mouse press in 5 pixel border.
+% --- Otherwise, executes on mouse press in 5 pixel border or over Zp.
+function Zp_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to Zp (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on key press with focus on TrackZ and none of its controls.
+function TrackZ_KeyPressFcn(hObject, eventdata, handles)
+% hObject    handle to TrackZ (see GCBO)
+% eventdata  structure with the following fields (see MATLAB.UI.CONTROL.UICONTROL)
+%	Key: name of the key that was pressed, in lower case
+%	Character: character interpretation of the key(s) that was pressed
+%	Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- If Enable == 'on', executes on mouse press in 5 pixel border.
+% --- Otherwise, executes on mouse press in 5 pixel border or over TrackZ.
+function TrackZ_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to TrackZ (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)

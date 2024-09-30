@@ -22,7 +22,7 @@ function varargout = Experiment_PB_DAQ(varargin)
 
 % Edit the above text to modify the response to help Experiment_PB_DAQ
 
-% Last Modified by GUIDE v2.5 11-Mar-2024 14:02:31
+% Last Modified by GUIDE v2.5 15-Aug-2024 13:06:20
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -2109,3 +2109,213 @@ function bSaveData_ButtonDownFcn(hObject, eventdata, handles)
 % hObject    handle to bSaveData (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on button press in useCustPoints.
+function useCustPoints_Callback(hObject, eventdata, handles)
+% hObject    handle to useCustPoints (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of useCustPoints
+
+
+% --- Executes on button press in bShowLegend.
+function bShowLegend_Callback(hObject, eventdata, handles)
+% hObject    handle to bShowLegend (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of bShowLegend
+
+
+% --- Executes on button press in bSavePDVoltage.
+function bSavePDVoltage_Callback(hObject, eventdata, handles)
+% hObject    handle to bSavePDVoltage (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of bSavePDVoltage
+
+
+% --- If Enable == 'on', executes on mouse press in 5 pixel border.
+% --- Otherwise, executes on mouse press in 5 pixel border or over LioPB3.
+function LioPB3_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to LioPB3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes on key press with focus on LioPB3 and none of its controls.
+function LioPB3_KeyPressFcn(hObject, eventdata, handles)
+% hObject    handle to LioPB3 (see GCBO)
+% eventdata  structure with the following fields (see MATLAB.UI.CONTROL.UICONTROL)
+%	Key: name of the key that was pressed, in lower case
+%	Character: character interpretation of the key(s) that was pressed
+%	Modifier: name(s) of the modifier key(s) (i.e., control, shift) pressed
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- Executes during object creation, after setting all properties.
+function LioPB2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to LioPB2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
+% --- If Enable == 'on', executes on mouse press in 5 pixel border.
+% --- Otherwise, executes on mouse press in 5 pixel border or over LioPB2.
+function LioPB2_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to LioPB2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+
+function edit133_Callback(hObject, eventdata, handles)
+% hObject    handle to edit133 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit133 as text
+%        str2double(get(hObject,'String')) returns contents of edit133 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit133_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit133 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function edit135_Callback(hObject, eventdata, handles)
+% hObject    handle to edit135 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit135 as text
+%        str2double(get(hObject,'String')) returns contents of edit135 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit135_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit135 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function edit136_Callback(hObject, eventdata, handles)
+% hObject    handle to edit136 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit136 as text
+%        str2double(get(hObject,'String')) returns contents of edit136 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit136_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit136 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function edit137_Callback(hObject, eventdata, handles)
+% hObject    handle to edit137 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit137 as text
+%        str2double(get(hObject,'String')) returns contents of edit137 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit137_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit137 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function edit138_Callback(hObject, eventdata, handles)
+% hObject    handle to edit138 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit138 as text
+%        str2double(get(hObject,'String')) returns contents of edit138 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit138_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit138 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function edit139_Callback(hObject, eventdata, handles)
+% hObject    handle to edit139 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit139 as text
+%        str2double(get(hObject,'String')) returns contents of edit139 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit139_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit139 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in saveRaw.
+function saveRaw_Callback(hObject, eventdata, handles)
+% hObject    handle to saveRaw (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of saveRaw
+
+
+

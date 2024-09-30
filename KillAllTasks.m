@@ -11,3 +11,11 @@ if isfield(hCPS,'hScan')
     DAQmxStopTask(hCPS.hScan);
     DAQmxClearTask(hCPS.hScan);
 end
+if isfield(hCPS,'hCounterPD0')
+    DAQmxStopTask(hCPS.hCounterPD0);
+    DAQmxClearTask(hCPS.hCounterPD0);
+end
+if isfield(hCPS,'hCounterPD1')
+    DAQmxStopTask(hCPS.hCounterPD1);
+    DAQmxClearTask(hCPS.hCounterPD1);
+end

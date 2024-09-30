@@ -3,11 +3,11 @@ pause on
 IP = '192.168.0.110';
 
 % Setup connection to AMC
-amc = connect(IP);
+amc = tcpclient(IP, 9090);
 
 % Activate axis 1
 % Internally, axes are numbered 0 to 2
-axis = 1; % Axis 2
+axis = 2; % Axis Z
 control_setControlOutput(amc, axis, true);
 
 [errNo, sensor_status] = status_getOlStatus(amc, axis);

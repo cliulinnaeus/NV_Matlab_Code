@@ -10,7 +10,7 @@ switch varargin{1}
     case 'WriteVoltages'
         [varargout{1}] = WriteVoltages(varargin{2},varargin{3});
     case 'CreateAIChannel'
-        [varargout{1},varargout{2}] = CreateAIChannel(varargin{2},varargin{3},varargin{4});
+        [varargout{1},varargout{2}] = CreateAIChannel(varargin{2},varargin{3},varargin{4},varargin{5});
     case 'ReadVoltageScalar'
         [varargout{1}] = ReadVoltageScalar(varargin{2});
     case 'WriteDigitalChannel'
@@ -20,13 +20,13 @@ switch varargin{1}
     case 'SetGatedCounter'
         SetGatedCounter(varargin{2},varargin{3},varargin{4},varargin{5});
     case 'SetGatedNCounter'
-        [varargout{1},varargout{2}] = SetGatedNCounter(varargin{2});
+        [varargout{1},varargout{2}] = SetGatedNCounter(varargin{3},varargin{2});
     case 'ReadCounterScalar'
         [varargout{1},varargout{2}] = ReadCounterScalar(varargin{2});
     case 'WriteAnalogVoltage'
         [varargout{1},varargout{2}] = WriteAnalogVoltage(varargin{2},varargin{3},varargin{4},varargin{5});
     case 'ReadAnalogVoltage'
-        [varargout{1},varargout{2}] = ReadAnalogVoltage(varargin{2},varargin{3},varargin{4});
+        [varargout{1},varargout{2}] = ReadAnalogVoltage(varargin{2},varargin{3},varargin{4},varargin{5});
     case 'SetCounter'
         [varargout{1},varargout{2}] = SetCounter(varargin{2});
     otherwise
@@ -53,7 +53,6 @@ DAQmxErr(DAQmxReadDigitalLines(task,1,10.0,DAQmx_Val_GroupByChannel,data,100,rea
 DAQmxStopTask(task);
 DAQmxClearTask(task);
 
-
 function WriteDigitalChannel(Device,Data)
 DAQmx_Val_ChanPerLine =0; % One Channel For Each Line
 DAQmx_Val_ChanForAllLines =1; % One Channel For All Lines
@@ -72,8 +71,6 @@ DAQmxErr(DAQmxWriteDigitalLines(task,1,1,10.0,DAQmx_Val_GroupByChannel,Data,samp
 % DAQmx Stop Code
 DAQmxStopTask(task);
 DAQmxClearTask(task);
-
-
 
 function [Answer] = ReadVoltageScalar(Device)
 %This does not work
@@ -171,7 +168,6 @@ sampsPerChanRead = libpointer('int32Ptr',0);
 [status, readArray]= DAQmxReadCounterF64(task, numSampsPerChan,...
     TimeOut, readArray, arraySizeInSamps, sampsPerChanRead );
 
-
 function status = WriteVoltages(Devices,Voltages)
 DAQmx_Val_Volts= 10348; % measure volts
 status = -1;
@@ -211,7 +207,6 @@ if status ~= 0
 end
 DAQmxClearTask(task);
 
-
 function status = SetGatedCounter(task,counter,src,gate)
 % added by Satcher 10/19/2016
 DAQmx_Val_Rising = 10280;
@@ -233,7 +228,7 @@ status = status + calllib('mynidaqmx','DAQmxSetDigLvlPauseTrigSrc',...
 status = status + calllib('mynidaqmx','DAQmxSetDigLvlPauseTrigWhen',...
     task, DAQmx_Val_Low);
 
-function [status, task] = SetGatedNCounter(N)
+function [status, task] = SetGatedNCounter(ID,N)
 %added by Satcher 12/2/2016
 DAQmx_Val_Volts= 10348; % measure volts
 DAQmx_Val_Rising = 10280; % Rising
@@ -249,13 +244,29 @@ DAQmx_Val_Ticks =10304; % Ticks
 DAQmx_Val_DigLvl = 10152;
 DAQmx_Val_Low=10214;
 
+
+if ID == 0
+    PortMap_Ctr_in = PortMap('Ctr in');
+    PortMap_Ctr_src = PortMap('Ctr src');
+elseif ID == 1
+    PortMap_Ctr_in = PortMap('Ctr in 1');
+    PortMap_Ctr_src = PortMap('Ctr src 1');
+elseif ID == 2
+    PortMap_Ctr_in = PortMap('Ctr in 2');
+    PortMap_Ctr_src = PortMap('Ctr src 2');
+elseif ID == 3
+    PortMap_Ctr_in = PortMap('Ctr in 3');
+    PortMap_Ctr_src = PortMap('Ctr src 3');
+end
+
+
 [ status, ~, task ] = DAQmxCreateTask([]);    % must clear task using DAQmxClearTask after done to free memory
 DAQmxErr(status);
-status = DAQmxCreateCICountEdgesChan(task,PortMap('Ctr in'),'',...
+status = DAQmxCreateCICountEdgesChan(task,PortMap_Ctr_in,'',...
     DAQmx_Val_Rising , 0, DAQmx_Val_CountUp);    % create a channel (nothing connected to Ctr in). read when rising edge
 DAQmxErr(status);
 status = calllib('mynidaqmx','DAQmxSetCICountEdgesTerm',...  % use Ctr in to read Ctr src (should read Ctr src when see its rising edge)
-    task, PortMap('Ctr in'), PortMap('Ctr src'));           % if no ext trig 
+    task, PortMap_Ctr_in, PortMap_Ctr_src);           % if no ext trig 
 DAQmxErr(status);
 
 status = calllib('mynidaqmx','DAQmxSetPauseTrigType',...  % set pause; pause measurement when digital signal is high or low
@@ -277,8 +288,74 @@ DAQmxErr(status);
 max_freq=1e7;
 
 status = DAQmxCfgSampClkTiming(task,PortMap('Ctr Gate'),max_freq,...
-    DAQmx_Val_Rising,DAQmx_Val_ContSamps ,N);
+    DAQmx_Val_Falling,DAQmx_Val_ContSamps ,N);
+
 DAQmxErr(status);
+
+
+% function [status, task] = SetGatedNCounter(ID,N)
+% %added by Satcher 12/2/2016
+% DAQmx_Val_Volts= 10348; % measure volts
+% DAQmx_Val_Rising = 10280; % Rising
+% DAQmx_Val_Falling =10171; % Falling
+% DAQmx_Val_FiniteSamps = 10178; % Finite Samples
+% DAQmx_Val_CountUp = 10128; % Count Up
+% DAQmx_Val_CountDown = 10124; % Count Down
+% DAQmx_Val_GroupByChannel = 0; % Group per channel
+% DAQmx_Val_ContSamps =10123; % Continuous Samples
+% DAQmx_Val_SampClkPeriods = 10286; % Sample Clock Periods
+% DAQmx_Val_Seconds =10364; % Seconds
+% DAQmx_Val_Ticks =10304; % Ticks
+% DAQmx_Val_DigLvl = 10152;
+% DAQmx_Val_Low=10214;
+% 
+% 
+% if ID == 0
+%     PortMap_Ctr_in = PortMap('Ctr in');
+%     PortMap_Ctr_src = PortMap('Ctr src');
+% elseif ID == 1
+%     PortMap_Ctr_in = PortMap('Ctr in 1');
+%     PortMap_Ctr_src = PortMap('Ctr src 1');
+% elseif ID == 2
+%     PortMap_Ctr_in = PortMap('Ctr in 2');
+%     PortMap_Ctr_src = PortMap('Ctr src 2');
+% elseif ID == 3
+%     PortMap_Ctr_in = PortMap('Ctr in 3');
+%     PortMap_Ctr_src = PortMap('Ctr src 3');
+% end
+% 
+% 
+% [ status, ~, task ] = DAQmxCreateTask([]);    % must clear task using DAQmxClearTask after done to free memory
+% DAQmxErr(status);
+% status = DAQmxCreateCICountEdgesChan(task,PortMap('Ctr in'),'',...
+%     DAQmx_Val_Rising , 0, DAQmx_Val_CountUp);    % create a channel (nothing connected to Ctr in). read when rising edge
+% DAQmxErr(status);
+% status = calllib('mynidaqmx','DAQmxSetCICountEdgesTerm',...  % use Ctr in to read Ctr src (should read Ctr src when see its rising edge)
+%     task, PortMap('Ctr in'), PortMap('Ctr src'));           % if no ext trig 
+% DAQmxErr(status);
+% 
+% status = calllib('mynidaqmx','DAQmxSetPauseTrigType',...  % set pause; pause measurement when digital signal is high or low
+%     task,DAQmx_Val_DigLvl); 
+% DAQmxErr(status);
+% 
+% % status = DAQmxCfgSampClkTiming(task,PortMap('Ctr Trig'),1.0,...
+% %     DAQmx_Val_Rising,DAQmx_Val_FiniteSamps ,N);
+% 
+% 
+% status = calllib('mynidaqmx','DAQmxSetDigLvlPauseTrigSrc',...   % use Ctr gate (digital signal) to pulse the reading on Ctr in
+%     task, PortMap('Ctr Gate')); 
+% DAQmxErr(status);
+% 
+% status = calllib('mynidaqmx','DAQmxSetDigLvlPauseTrigWhen',...   % pause when Ctr gate is low
+%     task, DAQmx_Val_Low);
+% DAQmxErr(status);
+% 
+% max_freq=1e7;
+% 
+% status = DAQmxCfgSampClkTiming(task,PortMap('Ctr Gate'),max_freq,...
+%     DAQmx_Val_Falling,DAQmx_Val_ContSamps ,N);
+% 
+% DAQmxErr(status);
 
 function [data, status] = ReadCounterScalar(task)
 % added by Satcher 10/19/2016
@@ -289,7 +366,6 @@ timeout=gTimeOut;
 task, timeout,data,[]); 
 DAQmxErr(status);
 DAQmxStopTask(task);
-%DAQmxClearTask(task);
 
 function [status, hScan] = WriteAnalogVoltage(chan,vec, samps, freq)
 DAQmx_Val_Volts= 10348; % measure volts
@@ -310,8 +386,7 @@ status = DAQmxWriteAnalogF64(hScan, samps, 0, 10,...
     DAQmx_Val_GroupByChannel, vec, zero_ptr);
 DAQmxErr(status);
 
-
-function [status, hRead] = CreateAIChannel(trig, samps, freq)
+function [status, hRead] = CreateAIChannel(trig, samps, freq,numChanelToCreate)
 DAQmx_Val_diff=10106;
 DAQmx_Val_Volts= 10348; % measure volts
 DAQmx_Val_Rising = 10280; % Rising
@@ -322,16 +397,25 @@ DAQmx_Val_FiniteSamps = 10178; % Finite Samples
 
 DAQmxErr(status);
 
-status = DAQmxCreateAIVoltageChan(hRead,PortMap('PD in'),'',...
-    DAQmx_Val_diff, -5,5, DAQmx_Val_Volts,[]);
+
+%add the channels to read one by one
+if strcmp(PortMap('meas2'), 'PD0')
+    status = DAQmxCreateAIVoltageChan(hRead,PortMap('PD0 in'),'',...
+        DAQmx_Val_diff, -5,5, DAQmx_Val_Volts,[]);
+end
+
+if strcmp(PortMap('meas3'), 'PD1')
+    status = DAQmxCreateAIVoltageChan(hRead,PortMap('PD1 in'),'',...
+        DAQmx_Val_diff, -5,5, DAQmx_Val_Volts,[]);
+end
 
 DAQmxErr(status);
 status = DAQmxCfgSampClkTiming(hRead,trig,freq,DAQmx_Val_Rising,DAQmx_Val_FiniteSamps,samps); %ctr1 out
 DAQmxErr(status);
 
-function [status, RawData] = ReadAnalogVoltage(task, samps, timeout)
+function [status, RawData] = ReadAnalogVoltage(task, samps, timeout, numChanToRead)
 DAQmx_Val_GroupByChannel = 0; % Group per channel
 sampsPerChanRead = libpointer('int32Ptr',0);
-RawData = zeros(1,samps);
-[status, RawData]=DAQmxReadAnalogF64(task,samps,timeout,DAQmx_Val_GroupByChannel,RawData,samps,sampsPerChanRead,[]);
+RawData = zeros(1,samps*numChanToRead);
+[status, RawData]=DAQmxReadAnalogF64(task,samps,timeout,DAQmx_Val_GroupByChannel,RawData,samps*numChanToRead,sampsPerChanRead,[]);
 DAQmxErr(status);

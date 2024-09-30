@@ -92,7 +92,7 @@ elseif tmax > 100 && tmax <= 100e3
 elseif tmax > 100e3 && tmax <= 100e6
     ScaleT = 1e-6;
     ScaleStr = 'ms';
-elseif tmax > 100e6 && tmax <= 100e9
+elseif tmax > 100e6 && tmax <= 1000e11
     ScaleT = 1e-9;
     ScaleStr = 's';
 end

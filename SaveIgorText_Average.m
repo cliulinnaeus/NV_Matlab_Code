@@ -27,13 +27,26 @@ final= fullfile(gSaveDataAve.path, file);
 %Save File as Data
 
 organized = [gmSEQ.SweepParam(~isnan(gmSEQ.signal(1,:)))];
-for i = 1:gmSEQ.dataN
+
+%check if to record photodiode voltage data
+pd=1;
+if gmSEQ.measPD
+    if strcmp(gmSEQ.meas2,'PD0')
+        pd = pd+1;
+    end
+    if strcmp(gmSEQ.meas3,'PD1')
+        pd = pd+1;
+    end
+end
+Ndata = gmSEQ.dataN*pd;
+
+for i = 1:Ndata
     organized = [organized; gmSEQ.signal_Ave(i, ~isnan(gmSEQ.signal(i,:)))];
 end
 
 fid = fopen(string(final),'wt');
 fprintf(fid,'IGOR\nWAVES/D/O sweep,sig(%d) \nBEGIN\n', gmSEQ.dataN);
-fprintf(fid, [repmat('%d ', [1, gmSEQ.dataN + 1]), '\n'], organized);
+fprintf(fid, [repmat('%d ', [1, Ndata + 1]), '\n'], organized);
 fprintf(fid, '\nEND\n');
 fclose(fid);
 

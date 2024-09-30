@@ -97,7 +97,7 @@ global gScan gbManChange gConfocal
 % measure initial count
 WriteVoltage(PortMap('Galvo x'),gScan.FixVx + gConfocal.XOffSet);
 WriteVoltage(PortMap('Galvo y'),gScan.FixVy + gConfocal.YOffSet);
-WriteVoltage('Obj_Piezo',gScan.FixVz);
+%WriteVoltage('Obj_Piezo',gScan.FixVz);
 
 global hCPS;
 
@@ -148,7 +148,7 @@ try
             device = PortMap('Galvo x');
             scan = xscan; % change x
             WriteVoltage(PortMap('Galvo y'), y0 + offset(2)); % fixed y
-            WriteVoltage('Obj_Piezo', z0); % fixed z
+            %WriteVoltage('Obj_Piezo', z0); % fixed z
             [ ~, hScan ] = DAQmxFunctionPool('WriteAnalogVoltage',device,scan+offset(i), NN+1,Freq);
             %%%%% measure count rate %%%%%%
             
@@ -351,7 +351,7 @@ global gScan gbManChange gConfocal gImageCorr gSaveImg
 disp('Image correlation tracking starts!')
 % Get the information from reference figure
 
-gImageCorr.RefIMG = 'C:\MATLAB_Code\ImageCorrelation\L111-02-B.txt'; % L111-02 spot
+% gImageCorr.RefIMG = 'C:\MATLAB_Code\ImageCorrelation\L111-02-B.txt'; % L111-02 spot
 % gImageCorr.RefIMG = 'C:\MATLAB_Code\ImageCorrelation\L111_08072022.txt'; % S011 alternative spot
 % gImageCorr.RefIMG = 'C:\MATLAB_Code\ImageCorrelation\Spot07302022.txt'; % S011 original spot
 % gImageCorr.RefIMG = 'C:\MATLAB_Code\ImageCorrelation\Spot07052022.txt'; % S011 alternative spot
@@ -360,6 +360,7 @@ gImageCorr.RefIMG = 'C:\MATLAB_Code\ImageCorrelation\L111-02-B.txt'; % L111-02 s
 % gImageCorr.RefIMG = 'C:\MATLAB_Code\ImageCorrelation\Image_2022-2-22_Img011.txt'; % S011
 % gImageCorr.RefIMG = 'C:\MATLAB_Code\ImageCorrelation\Image_2021-11-23_Img021.txt'; % Update for L026 11/23/2021
 % gImageCorr.RefIMG = 'C:\MATLAB_Code\ImageCorrelation\Image_2021-8-10_Img004.txt';
+gImageCorr.RefIMG = 'C:\MATLAB_Code\ImageCorrelation\Image_2024-9-30_Img016.txt';
 
 [IMG_ref, Info_ref]=ReadImageFile_ImgCorr(gImageCorr.RefIMG);
 gImageCorr.RefVx = IMG_ref.FixVx;
@@ -709,7 +710,9 @@ gConfocal.V_per_um='V_per_um.txt';
 ReadStartingFile(handles);
 
 %% Load PI MATLAB Driver GCS2 (Piezo) added by Weijie 09/21/2021
-% controllerSerialNumber = PortMap('Piezo');
+piezoPFM450FunctionPool('connect');
+
+
 % gPiezo.axis = '1';
 % isWindows   = any (strcmp (mexext, {'mexw32', 'mexw64'}));
 % if(~isdeployed) % Determine whether code is running in deployed or MATLAB mode
@@ -753,6 +756,8 @@ ReadStartingFile(handles);
 %     rethrow(lasterror);
 % end
 
+
+
 set(handles.XOffSet,'String',gConfocal.XOffSet);
 set(handles.YOffSet,'String',gConfocal.YOffSet);
 gmSEQ.meas=PortMap('meas');
@@ -780,6 +785,9 @@ gmSEQ.meas2=PortMap('meas2');
 % pause(0.5)
 
 % UpdateVoltage1(hObject, eventdata, handles);
+
+
+
 
 function UpdateVoltage1(hObject, eventdata, handles)
 global gmSEQ gSG2
@@ -928,134 +936,121 @@ end
 ImageFillUpForm('UpdateScan', hObject, eventdata, handles);
 
 function TrackZ(hObject, eventdata, handles)
-global gScan gbManChange gConfocal
-minVz = eval(get(handles.minVz,'String'));
-maxVz = eval(get(handles.maxVz,'String'));
-NVz = eval(get(handles.NVz,'String'));
-% zscan = linspace(minVz, maxVz, NVz);
-Vz = eval(get(handles.FixVz,'String'));
-zscan = linspace(Vz-(maxVz-minVz)/2, Vz+(maxVz-minVz)/2, NVz);
+%% modified to be used with Thorlabs piezo PFM450 (CL - 9/24/24)
 
-% zscan = 54:0.2:61;
-dt = 0.01;
+global gScan gbManChange gConfocal hCPS
+minLz = eval(get(handles.minVz,'String'));
+maxLz = eval(get(handles.maxVz,'String'));
+NLz = eval(get(handles.NVz,'String'));
+zscan = linspace(minLz, maxLz, NLz);
 NN = length(zscan);
 
 % measure initial count
 WriteVoltage(PortMap('Galvo x'),gScan.FixVx + gConfocal.XOffSet);
 WriteVoltage(PortMap('Galvo y'),gScan.FixVy + gConfocal.YOffSet);
-WriteVoltage('Obj_Piezo',gScan.FixVz);
 
-global hCPS;
+%connect to attocube
+% IP = '192.168.0.110';
+% amc = tcpclient(IP, 9090);
+% axis = 2; 
+% control_setControlOutput(amc, axis, true); % Activate Axis Z
+% pause(1)
+% [~, z0] = move_getPosition(amc, axis);
 
-NRead = 10;
-DT = dt;
-TimeOut = DT * NRead * 1.1;
-Freq = 1/DT;
+% returns position in um
+z0 = piezoPFM450FunctionPool('getposition');
+% TODO
+fprintf('Current Z = %s\n', z0);
+%disp(['Current Z =' z0 'µm'])
+%get current z
+%z_current = 
+count =zeros(1,NN);
+scan = zscan;
 try
-    [status, hPulse] = DigPulseTrainCont(Freq,0.5,NRead+1);
-    
-    hCounter = SetCounter(NRead+1, Freq);
-    
-    hCPS.hCounter = hCounter;
-    hCPS.hPulse = hPulse;
-    
-    % tracking start
-    disp('z position calibration starts.');
-    
-    %     x0 = gScan.FixVx; % this is in voltage
-    %     y0 = gScan.FixVy;
-    z0 = gScan.FixVz;
-    
-    offset=[gConfocal.XOffSet gConfocal.YOffSet 0];
-    
-    device = 'Obj_Piezo';
-    scan = zscan; % change y
-    count =zeros(1,NN);
     for j=1:NN
-        WriteVoltage(device, scan(j) + offset(3));
-        if j==1
-            pause(3);
-        else
-            pause(.5);
-        end
+        %Move to target z
+        %atto_MoveZ(amc,axis,zscan(j))       
+        piezoPFM450FunctionPool('setposition', zscan(j));
+        pause(0.5);
+        z_j = piezoPFM450FunctionPool('getposition');
+        
+        fprintf('Current Z = %s\n', z_j);
         %%%%% measure count rate %%%%%%
+        count(j)=RunCPSOnce(gScan,hObject, eventdata, handles);
+        %[~, z_j] = move_getPosition(amc, axis);
+        scan(j) = z_j;
+        plot(handles.axes1, scan,count,'.-r');
         
-        NRead = 10;
-        DT = dt;
-        TimeOut = DT * NRead * 1.1;
-        Freq = 1/DT;
+        xlim('auto');
+        ylim('auto');
+        xlabel( 'z(um)');
+        ylabel('Counts ');
         
-        [~, hPulse] = DigPulseTrainCont(Freq,0.5,NRead+1);
-        
-        hCounter = SetCounter(NRead+1, 10000);
-        
-        hCPS.hCounter = hCounter;
-        hCPS.hPulse = hPulse;
-        
-        status = DAQmxStartTask(hCounter);  DAQmxErr(status);
-        status = DAQmxStartTask(hPulse);    DAQmxErr(status);
-        
-        DAQmxWaitUntilTaskDone(hCounter,TimeOut);
-        DAQmxStopTask(hPulse);
-        
-        A = ReadCounter(hCounter,NRead+1);
-        DAQmxStopTask(hCounter);
-        A=ProcessDataVector(A,1);
-        count(j)=ProcessDataCPS(A, NRead, DT);
-        
-        DAQmxClearTask(hPulse);
-        DAQmxClearTask(hCounter);
-        
-        plot(handles.axes1, scan,count,'.r')
-        % plot(scan,count,'.r',scan,f(scan),'-b')
-        xlim([min(scan) max(scan)])
-        xlabel( ' z(um)')
-        ylabel('Counts ')
-        
-        if get(handles.StopTracking, 'Value'), break; end
+        if get(handles.StopTracking, 'Value')
+            pause(0.3);
+            break; 
+        end
     end
     
-    bFit = 0;
-    if bFit == 1 % for LT2 only
-        g = fittype( 'LT2ZFit(x, A, B, C, D, E)');
-        f = fit(scan',count', g, 'StartPoint', [0.01, 0.007, 0.15, 50, -0.001], 'lower', [0, -inf, -inf, -inf, -inf]);
-        % disp(f)
-        hold on
-        plot(handles.axes1, scan, f(scan),'-b')
-        hold off
-        % z0 = round(f.D + 2, 1);
-    elseif bFit == 2 % for LT2 only
-        g = fittype( 'LT2ZFit2(x, A, B, C, D, E)');
-        f = fit(scan',count', g, 'StartPoint', [0.15, 0.15, 0.01, 50, -0.001], 'lower', [0, 0, 0, -inf, -inf]);
-        % disp(max(count))
-        % disp(f)
-        hold on
-        plot(handles.axes1, scan, f(scan),'-b')
-        hold off
-        z0 = round(f.D, 1);     % correction for hysteresis
-    else
-        % Fix the position at the maximum counts without considering
-        % hysteresis (applicable for closed-loop piezo)
-        % disp(count);
-        [maxCount, maxPos] = max(count);
-        z0 = scan(maxPos); % 0.3 is a experience value Weijie 12/11/2021
-    end
-    gScan.FixVz = z0;
-    set(handles.FixVz,'String',num2str(z0));
+    %go to old position 
+    %piezoPFM450FunctionPool('setposition', z0);
+    %go to new position 
+    [~, ind] = max(count);
+    new_z = scan(ind);
+    piezoPFM450FunctionPool('setposition', new_z);    
+    pause(1);
+    curr_z = piezoPFM450FunctionPool('getposition');
+    pause(0.5);
+    set(handles.FixVz,'String', num2str(new_z));
+
     
-    %go to new position
-    WriteVoltage('Obj_Piezo',z0);
-    
+    fprintf('Current Z = %s\n', curr_z);
+    %atto_MoveZ(amc,axis,z0);
+    %clear amc    
 catch ME
     KillAllTasks;
+    %control_setControlOutput(amc, axis, false); %Deactivate axis
+    %clear amc
     rethrow(ME);
 end
+
+function atto_MoveZ(amc,axis,target)
+
+[errNo, sensor_status] = status_getOlStatus(amc, axis);
+if sensor_status == 1
+    control_setControlOutput(amc, axis, false); %Deactivate axis
+    clear amc
+    error('attocube sensor status wrong')
+else
+    % move to z = target 
+    [errNo, position] = move_getPosition(amc, axis);
+    move_setControlTargetPosition(amc, axis, target);
+    control_setControlMove(amc, axis, true);
+
+    [errNo, inTargetRange] = status_getStatusTargetRange(amc, axis);
+    while ~inTargetRange{1}
+        % Read out position in nm
+        [errNo, position] = move_getPosition(amc, axis);
+        %fprintf('Z Position: %.2f µm', position/1000);
+        pause(0.1);
+        [errNo, inTargetRange] = status_getStatusTargetRange(amc, axis);
+    end
+     
+    % Stop approach
+    control_setControlMove(amc, axis, false);
+    if errNo{1}
+        control_setControlOutput(amc, axis, false); %Deactivate axis
+        clear amc
+        error('attocube sensor status wrong')
+    end
+end
+
 
 function TrackZContin(hObject, eventdata, handles)
 global gScan
 now = clock;
 date = [num2str(now(1)),'-',num2str(now(2)),'-',num2str(round(now(3)))];
-fullPath=fullfile('C:\Data\',date,'\');
+fullPath=fullfile('D:\Data\',date,'\');
 if ~exist(fullPath,'dir')
     mkdir(fullPath);
 end
@@ -1900,7 +1895,20 @@ switch what
         Device = PortMap('Galvo x');
     case {2,PortMap('Galvo y')}
         Device = PortMap('Galvo y');
-    case {3,'Obj_Piezo'}
+    case {3,'Obj_Piezo'}        
+        if Voltage > gPiezo.maxposition
+            Voltage = gPiezo.maxposition;
+        end
+        if Voltage < gPiezo.minposition
+            Voltage = gPiezo.minposition;
+        end
+%         % for piezo in closed loop config, voltage is actually 
+%         % a position value in um
+        piezoPFM450FunctionPool('setposition', Voltage);
+        pause(1);
+        pos = piezoPFM450FunctionPool('getposition');
+        fprintf('Current Z position: %s\n', pos);
+        
         %         % #EO
         %         if Voltage > gPiezo.maximumPosition
         %             Voltage = gPiezo.maximumPosition;
@@ -1997,6 +2005,7 @@ if get(handles.bMinThresh,'Value')
     MinThresh = eval(get(handles.MinThresh,'String'));
 else MinThresh=v(1);
 end
+
 
 if get(handles.bMaxThresh,'Value')
     MaxThresh = eval(get(handles.MaxThresh,'String'));
@@ -3135,7 +3144,7 @@ screencapture(gcf,[390 160 405 380],'clipboard');
 function data= ProcessDataCPS(RawData, NRead, intTime)
 global gmSEQ
 if strcmp(gmSEQ.meas,'SPCM')
-    data=sum(RawData)/(NRead * intTime);
+    data=sum(RawData)/((NRead-1) * intTime);
 elseif strcmp(gmSEQ.meas,'APD')
     data=mean(RawData);
 end

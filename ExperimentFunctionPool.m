@@ -17,6 +17,7 @@ switch what
     case 'Run'
         LoadUserInputs(hObject,eventdata,handles);
         RunSequence(hObject, eventdata, handles);
+        %RunSequenceTimeTagger(hObject, eventdata, handles);
         % SaveIgorText(handles); % move to RunSequence
     case 'PlotExtRaw'
         PlotExtRaw(hObject,eventdata,handles);
@@ -77,6 +78,7 @@ PBFunctionPool('PBON',OutPuts);
 
 function Initialize(hObject, eventdata, handles)
 global gmSEQ gSG gSG2 gSG3
+
 StrL = SequencePool('PopulateSeq');
 set(handles.sequence,'String',StrL);
 clear StrL;
@@ -95,7 +97,7 @@ LoadPBESR;
 % LoadNIDAQmx;
 
 % load SRS SG386 DLL
-SignalGeneratorFunctionPool('Init',PortMap('SG com'));
+SignalGeneratorFunctionPool('Init',PortMap('SG ip'));
 gSG.bMod='IQ';
 gSG.bModSrc='External';
 SignalGeneratorFunctionPool('SetMod');
@@ -113,16 +115,14 @@ SignalGeneratorFunctionPool('SetMod');
 
 function LoadSEQ(hObject, eventdata, handles,ax)
 global gmSEQ
-
 StrL = SequencePool('PopulateSeq');
 set(handles.sequence,'String',StrL);
 clear StrL;
-
-% SignalGeneratorFunctionPool('Init',PortMap('SG com'));
-
 LoadUserInputs(hObject,eventdata,handles);
 SequencePool(string(gmSEQ.name));
-
+ 
+SequencePool(string(gmSEQ.name));
+LoadUserInputs(hObject,eventdata,handles);
 DrawSequence(gmSEQ, hObject, eventdata, ax);
 
 debug = false;
@@ -142,27 +142,6 @@ end
 % added by Weijie 06/11/2021
 
 switch gmSEQ.name{1}
-    case 'Rabi'
-%         set(handles.FROM1,'string',num2str(20));
-%         set(handles.TO1,'string',num2str(30));
-%         set(handles.SweepNPoints,'string',num2str(21));        
-%         % set(handles.fixPow,'string',num2str(7));
-%         set(handles.Repeat,'string',num2str(60000));
-%         set(handles.bSweep2,'Value',0);
-%         set(handles.bTrack,'Value',0);
-%         set(handles.Alternate,'Value',0);
-%         set(handles.Ref,'Value',0);        
-    case 'ODMR'
-%         set(handles.FROM1,'string',num2str(2.36));
-%         set(handles.TO1,'string',num2str(2.38));
-%         set(handles.SweepNPoints,'string',num2str(21));        
-%         set(handles.fixPow,'string',num2str(-30)); 
-%         set(handles.pi,'string',num2str(1000));
-%         set(handles.Repeat,'string',num2str(60000));
-%         set(handles.bSweep2,'Value',0);       
-%         set(handles.bTrack,'Value',0);
-%         set(handles.Alternate,'Value',0);
-%         set(handles.Ref,'Value',0);
     case 'Special Cooling'
         set(handles.pi,'string',num2str(24));        
         set(handles.FROM1,'string',num2str(0));
@@ -199,6 +178,7 @@ global gmSEQ gSG gSG2 gSG3
 str=get(handles.sequence, 'String');
 val=get(handles.sequence, 'Value');
 gmSEQ.name= str(val);
+
 gmSEQ.From= str2double(get(handles.FROM1, 'String'));
 gmSEQ.To= str2double(get(handles.TO1, 'String'));
 gmSEQ.bSweep1log = get(handles.bSweep1log,'Value');
@@ -216,6 +196,8 @@ gmSEQ.bSweep3=get(handles.bSweep3,'Value');
 gmSEQ.To3= str2double(get(handles.TO3, 'String'));
 gmSEQ.N3=str2double(get(handles.SweepNPoints3,'String'));
 
+
+gmSEQ.Var = cell2mat(handles.SweepParaTable.Data(:,1));
 % edit by Chong on 3/1/2017
 % gmSEQ.PulseNum = str2double(get(handles.PulseNum, 'String'));
 % gmSEQ.tP1Polar = str2double(get(handles.tP1Polar, 'String'));
@@ -230,6 +212,8 @@ gmSEQ.misc= str2double(get(handles.misc, 'String'));
 gmSEQ.CtrGateDur=str2double(get(handles.CtrGateDur,'String'));
 gmSEQ.bWarmUpAOM=get(handles.bWarmUpAOM,'Value');
 gmSEQ.bTrack=get(handles.bTrack,'Value');
+gmSEQ.saveRaw = get(handles.saveRaw,'Value');
+
 gSG.Pow = str2double(get(handles.fixPow, 'String'));
 gSG.Freq = str2double(get(handles.fixFreq, 'String'))*1e9;
 gSG.ACmodAWG = get(handles.ACmodAWG,'Value'); % AC modulation of two SG is controlled by a single button
@@ -313,6 +297,37 @@ if get(handles.bAverage,'Value')
 else
     gmSEQ.Average=1;
 end
+
+if (gmSEQ.bSweep1log)
+    gmSEQ.SweepParam=logspace(log10(gmSEQ.From),log10(gmSEQ.To),gmSEQ.N);
+else
+    gmSEQ.SweepParam=linspace(gmSEQ.From,gmSEQ.To,gmSEQ.N);
+end
+
+if (gmSEQ.bSweep2)
+    if (gmSEQ.bSweep2log)
+        gmSEQ.SweepParam=[gmSEQ.SweepParam logspace(log10(gmSEQ.From2),log10(gmSEQ.To2),gmSEQ.N2)];
+    else
+        gmSEQ.SweepParam=[gmSEQ.SweepParam linspace(gmSEQ.From2,gmSEQ.To2,gmSEQ.N2)];
+    end
+end
+
+if (gmSEQ.bSweep3)
+    if (gmSEQ.bSweep3log)
+        gmSEQ.SweepParam=[gmSEQ.SweepParam logspace(log10(gmSEQ.From3),log10(gmSEQ.To3),gmSEQ.N3)];
+    else
+        gmSEQ.SweepParam=[gmSEQ.SweepParam linspace(gmSEQ.From3,gmSEQ.To3,gmSEQ.N3)];
+    end
+end
+
+
+gmSEQ.bCust = get(handles.useCustPoints,'Value');
+if gmSEQ.bCust
+    gmSEQ.SweepParam = linspace(1e6, 1e11+1e6, 3);
+    disp("Customized input, GUI values are overwritten.")
+end
+
+gmSEQ.measPD = get(handles.bSavePDVoltage,'Value');
 
 
 

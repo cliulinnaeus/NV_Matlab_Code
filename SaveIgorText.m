@@ -4,7 +4,7 @@ global gSaveData gmSEQ  gSG
 %global gScan
 now = clock;
 date = [num2str(now(1)),'-',num2str(now(2)),'-',num2str(round(now(3)))];
-fullPath=fullfile('C:\Data\',date,'\');
+fullPath=fullfile('D:\Data\',date,'\');
 if ~exist(fullPath,'dir')
     mkdir(fullPath);
 end
@@ -43,13 +43,26 @@ fnSEQ=fieldnames(gmSEQ);
 fnSG=fieldnames(gSG);
 
 organized = [gmSEQ.SweepParam(~isnan(gmSEQ.signal(1,:)))];
-for i = 1:gmSEQ.dataN
+
+%check if to record photodiode voltage data
+pd=1;
+if gmSEQ.measPD
+    if strcmp(gmSEQ.meas2,'PD0')
+        pd = pd+1;
+    end
+    if strcmp(gmSEQ.meas3,'PD1')
+        pd = pd+1;
+    end
+end
+Ndata = gmSEQ.dataN*pd;
+
+for i = 1:Ndata
     organized = [organized; gmSEQ.signal(i, ~isnan(gmSEQ.signal(i,:)))];
 end
 
 fid = fopen(string(final),'wt');
 fprintf(fid,'IGOR\nWAVES/D/O sweep,sig(%d) \nBEGIN\n', gmSEQ.dataN);
-fprintf(fid, [repmat('%d ', [1, gmSEQ.dataN + 1]), '\n'], organized);
+fprintf(fid, [repmat('%d ', [1, Ndata + 1]), '\n'], organized);
 fprintf(fid, '\nEND\n');
 
 % if gmSEQ.ctrN==3
@@ -70,22 +83,23 @@ for i=1:length(fnSEQ)
     if ~strcmp(st,'CHN') &&~strcmp(st,'SweepParam')&&~strcmp(st,'reference')&&~strcmp(st,'signal')&&~strcmp(st,'reference2')&&~strcmp(st,'reference3')&&~strcmp(st,'signal_2')&&~strcmp(st,'reference_2')&&~strcmp(st,'reference2_2')&&~strcmp(st,'reference3_2')...
             &&~strcmp(st,'reference_Ave')&&~strcmp(st,'signal_Ave')&&~strcmp(st,'reference2_Ave')&&~strcmp(st,'reference3_Ave')&&~strcmp(st,'signal_2_Ave')&&~strcmp(st,'reference_2_Ave')&&~strcmp(st,'reference2_2_Ave')&&~strcmp(st,'reference3_2_Ave')&&...
             ~strcmp(st,'signal_3')&&~strcmp(st,'reference_3')&&~strcmp(st,'reference2_3')&&~strcmp(st,'reference3_3')&&~strcmp(st,'signal_3_Ave')&&~strcmp(st,'reference_3_Ave')&&~strcmp(st,'reference2_3_Ave')&&~strcmp(st,'reference3_3_Ave')&&~strcmp(st,'TotalSig')&&~strcmp(st,'TotalSig_Ave')...
-            &&~strcmp(st,'ScaleStr')&&~strcmp(st,'ScaleT')
+            &&~strcmp(st,'ScaleStr')&&~strcmp(st,'ScaleT')&&~strcmp(st,'Var')&&~strcmp(st,'sequenceLocation')
         fprintf(fid,comment(string(st)));
         
         fprintf(fid,comment(string(gmSEQ.(char(st)))));
+        %disp(i)
     end
 end
-
-fprintf(fid,comment('SIGNAL GENERATOR PARAMETERS'));
-
-for i=1:length(fnSG)
-    st=fnSG(i);
-    if ~strcmp(st,'serial')&&~strcmp(st,'qErr')
-        fprintf(fid,comment(string(st)));
-        fprintf(fid,comment(string(gSG.(char(st)))));
-    end
-end
+% 
+% fprintf(fid,comment('SIGNAL GENERATOR PARAMETERS'));
+% 
+% for i=1:length(fnSG)
+%     st=fnSG(i);
+%     if ~strcmp(st,'serial')&&~strcmp(st,'qErr')
+%         fprintf(fid,comment(string(st)));
+%         fprintf(fid,comment(string(gSG.(char(st)))));
+%     end
+% end
 
 fclose(fid);
 
