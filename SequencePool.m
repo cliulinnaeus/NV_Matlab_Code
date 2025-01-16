@@ -25,6 +25,12 @@ switch varargin{1}
         Rabi_Raman();
     case 'Rabi_SG2'
         Rabi_SG2();
+    case 'f_PiCali'
+        f_PiCali();
+    case 'f_InitDurCali'
+        f_InitDurCali();   
+    case 'f_CtrGateCali'
+        f_CtrGateCali();          
     case 'Scan_Init_time'
         Scan_Init_time();
     case 'Scan_CounterGate_time'
@@ -39,12 +45,54 @@ switch varargin{1}
         AOMDelay();
     case 'AOM Delay Green'
         AOMDelay_Green();
+    case 'IQ_pulse_test'
+        IQ_pulse_test()
+    case 'f_Echo'
+        f_Echo();
+    case 'f_Rabi'
+        f_Rabi();
+    case 'f_PulsedESR'
+        f_PulsedESR();        
+    case 'f_T1'
+        f_T1();
+    case 'f_FPGA_delay'
+        f_FPGA_delay();
+    case 'f_XY8'
+        f_XY8();
+    case 'f_XY4'
+        f_XY4();
+    case 'f_DEER_scan_power'
+        f_DEER_scan_power();
+    case 'f_DEER_scan_freq'
+        f_DEER_scan_freq();
+    case 'f_DEER_scan_tau'
+        f_DEER_scan_tau();
+    case 'f_DEER_scan_dur'
+        f_DEER_scan_dur();
+    case 'f_DEER_XY8'
+        f_DEER_XY8();
+    case 'f_DEER_scan_power_XXY'
+        f_DEER_scan_power_XXY();
+    case 'f_DEER_scan_dur_XXY'
+        f_DEER_scan_dur_XXY();
+    case 'f_Corr_T1'
+        f_Corr_T1();        
     case 'Echo'
         Echo();
+    case 'Echo_wDarkRef'
+        Echo_wDarkRef();
+    case 'Echo_tomo1'
+        Echo_tomo1();        
     case 'XY8_N'
         XY8_N();
+    case 'XY8_N_new'
+        XY8_N_new();
+    case 'XY8_N_fixDutyCycle'
+        XY8_N_fixDutyCycle();        
     case 'XY8_N_wDarkRef'
         XY8_N_wDarkRef();
+    case 'XY8_N_tomo1'
+        XY8_N_tomo1();        
     case 'ESR'
         ESR();
     case 'T1'
@@ -96,7 +144,27 @@ function StrL = PopulateSeq
 % Here I only put the sequence which is frequently used.
 
 StrL{1} = 'Select Sequence';
+StrL{numel(StrL)+1}='--------------------FPGA--------------------';
+StrL{numel(StrL)+1}='f_PulsedESR';
+StrL{numel(StrL)+1}='f_Rabi';
+StrL{numel(StrL)+1}='f_Echo';
+StrL{numel(StrL)+1}='f_T1';
+StrL{numel(StrL)+1}='f_FPGA_delay';
+StrL{numel(StrL)+1}='f_PiCali';
+StrL{numel(StrL)+1}='f_InitDurCali';
+StrL{numel(StrL)+1}='f_CtrGateCali';
+StrL{numel(StrL)+1}='f_XY8';
+StrL{numel(StrL)+1}='f_XY4';
+StrL{numel(StrL)+1}='f_DEER_scan_tau';
+StrL{numel(StrL)+1}='f_DEER_scan_dur';
+StrL{numel(StrL)+1}='f_DEER_scan_freq';
+StrL{numel(StrL)+1}='f_DEER_scan_power';
+StrL{numel(StrL)+1}='f_DEER_XY8';
+StrL{numel(StrL)+1}='f_DEER_scan_dur_XXY';
+StrL{numel(StrL)+1}='f_DEER_scan_power_XXY';
+StrL{numel(StrL)+1}='f_Corr_T1';
 
+StrL{numel(StrL)+1}='--------------------SRS--------------------';
 StrL{numel(StrL)+1}='ESR';
 StrL{numel(StrL)+1}='ODMR';
 StrL{numel(StrL)+1}='ODMR_sweep';
@@ -106,9 +174,14 @@ StrL{numel(StrL)+1}='Rabi_IQ';
 StrL{numel(StrL)+1}='Rabi_fix_MWDutyCycle';
 
 StrL{numel(StrL)+1}='Echo';
+StrL{numel(StrL)+1}='Echo_wDarkRef';
+StrL{numel(StrL)+1}='Echo_tomo1';
 StrL{numel(StrL)+1}='Ramsey';
 StrL{numel(StrL)+1}='XY8_N';
+StrL{numel(StrL)+1}='XY8_N_new';
+StrL{numel(StrL)+1}='XY8_N_fixDutyCycle';
 StrL{numel(StrL)+1}='XY8_N_wDarkRef';
+StrL{numel(StrL)+1}='XY8_N_tomo1';
 
 StrL{numel(StrL)+1}='--------------------T1--------------------';
 StrL{numel(StrL)+1}='T1';
@@ -138,6 +211,7 @@ StrL{numel(StrL)+1}='Scan_Init_time';
 StrL{numel(StrL)+1}='Scan_CounterGate_time';
 StrL{numel(StrL)+1}='CtrDur';
 StrL{numel(StrL)+1}='CtrDelay';
+StrL{numel(StrL)+1}='IQ_pulse_test';
 
 function Scan_CounterGate_time
 global gmSEQ gSG
@@ -776,7 +850,7 @@ gmSEQ.CHN(1).DT=[gmSEQ.CtrGateDur];
 
 gmSEQ.CHN(2).PBN=PBDictionary('GreenAOM');
 gmSEQ.CHN(2).NRise=1;
-gmSEQ.CHN(2).T=[2000];
+gmSEQ.CHN(2).T=[1e5];
 gmSEQ.CHN(2).DT=[gmSEQ.readout];
 
 gmSEQ.CHN(3).PBN=PBDictionary('dummy1');
@@ -909,7 +983,7 @@ index_m = find(arr ==m); %find the index of the current t
 index_n = 1 + max_index - index_m; %find the index of the differential t
 n = arr(index_n); %find the differential t
 
-d = 1e3; %AfterLaser
+d = 1000; %AfterLaser
 u = 1000; %AfterPulse
 i = gmSEQ.readout; 
 r = gmSEQ.CtrGateDur;

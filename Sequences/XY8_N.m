@@ -23,18 +23,26 @@ pre_init_wait = 10000;
 init_dur = gmSEQ.readout;
 readout_dur = gmSEQ.CtrGateDur;
 post_init_wait = 30000; %wait time after init
-post_seqMW_wait = 3000; %wait time between the last pulse and the readout
+post_seqMW_wait = 20000; %wait time between the last pulse and the readout
 pi_half = gmSEQ.halfpi;
 pi_half_diff = pi_half+2;
 pi = gmSEQ.pi;
-tau = gmSEQ.Var(1)/2; %2tau is interpulse spacing
+tau = gmSEQ.interval/2; %2tau is interpulse spacing
 XY8_dur = 16*tau+8*pi;
 q = 20; %rise time for the iq signal
 
 T_green_1_start = pre_init_wait;
-T_green_2_start = T_green_1_start + init_dur + post_init_wait + pi_half*2 + XY8_dur*m + post_seqMW_wait;
+if m == 0
+    T_green_2_start = T_green_1_start + init_dur + post_init_wait + pi_half*2 + tau + post_seqMW_wait;
+else
+    T_green_2_start = T_green_1_start + init_dur + post_init_wait + pi_half*2 + XY8_dur*m + post_seqMW_wait;
+end
 T_green_3_start = T_green_2_start + init_dur + pre_init_wait;
-T_green_4_start = T_green_3_start + init_dur + post_init_wait + pi_half+pi_half_diff + XY8_dur*n + post_seqMW_wait;
+if n == 0
+    T_green_4_start = T_green_3_start + init_dur + post_init_wait + pi_half+pi_half_diff + tau + post_seqMW_wait;
+else
+    T_green_4_start = T_green_3_start + init_dur + post_init_wait + pi_half+pi_half_diff + XY8_dur*n + post_seqMW_wait;
+end
 
 MW_XY8_DT = [pi,pi,pi,pi,pi,pi,pi,pi];
 
@@ -74,9 +82,9 @@ else
 end
 n_MW_DT = [pi_half,repmat(MW_XY8_DT,1,n),pi_half_diff];
 
-T=[m_MW_T,n_MW_T]; 
-DT=[m_MW_DT,n_MW_DT];
-ConstructSeq(T,DT)
+T_x=[m_MW_T,n_MW_T]; 
+DT_x=[m_MW_DT,n_MW_DT];
+ConstructSeq(T_x,DT_x)
 
 
 gmSEQ.CHN(4).PBN=PBDictionary('+X');
@@ -145,7 +153,9 @@ ConstructSeq(T,DT)
 
 gmSEQ.CHN(6).PBN=PBDictionary('-X');
 gmSEQ.CHN(6).NRise=1;
-T=[T_green_4_start-post_seqMW_wait-pi_half_diff-q]; 
+T_iq_x = sum(T_x)+sum(DT_x); 
+%T=[T_green_4_start-post_seqMW_wait-pi_half_diff-q];
+T = [T_iq_x - pi_half_diff - q];
 DT=[pi_half_diff+2*q];    
 ConstructSeq(T,DT)
 

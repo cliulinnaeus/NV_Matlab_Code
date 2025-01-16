@@ -173,13 +173,13 @@ global gSG
 from = gSG.Freq - gSG.sweepDev;
 to = gSG.Freq + gSG.sweepDev; 
 bValid = false;
-% if from >= 1.425e9 && to <= 3.075e9
-%     bValid = true;
-% elseif from >= 2.85e9 && to <= 6.15e9
-%     bValid = true;
-% end
-if from >= 0.704e9 && to <= 5.9e9
-% if from >= 0.020e9 && to <= 2e9
+if from >= 0.7e9 && to <= 0.759375e9
+    bValid = true;
+elseif from >= 0.759375e9 && to <= 1.51875e9
+    bValid = true;
+elseif from >= 1.51875e9 && to <= 3.0375e9
+    bValid = true;
+elseif from >= 3.0375e9 && to <= 6e9
     bValid = true;
 end
 

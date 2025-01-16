@@ -1,0 +1,84 @@
+function seq = getAutoPara()
+
+%seq1
+seq{1}.name = 'f_XY8';
+seq{1}.interval = '32';
+seq{1}.FROM1 = '0';
+seq{1}.TO1 = '16';
+seq{1}.SweepNPoints= '17';
+seq{1}.Average = '20';
+
+%seq2
+seq{numel(seq)+1}.name = 'f_XY8';
+seq{numel(seq)}.interval = '40';
+seq{numel(seq)}.FROM1 = '0';
+seq{numel(seq)}.TO1 = '15';
+seq{numel(seq)}.SweepNPoints= '16';
+
+seq{numel(seq)+1}.name = 'f_XY8';
+seq{numel(seq)}.interval = '48';
+seq{numel(seq)}.FROM1 = '0';
+seq{numel(seq)}.TO1 = '14';
+seq{numel(seq)}.SweepNPoints= '15';
+
+seq{numel(seq)+1}.name = 'f_XY8';
+seq{numel(seq)}.interval = '56';
+seq{numel(seq)}.FROM1 = '0';
+seq{numel(seq)}.TO1 = '13';
+seq{numel(seq)}.SweepNPoints= '12';
+
+seq{numel(seq)+1}.name = 'f_XY8';
+seq{numel(seq)}.interval = '64';
+seq{numel(seq)}.FROM1 = '0';
+seq{numel(seq)}.TO1 = '1';
+seq{numel(seq)}.SweepNPoints= '15';
+
+seq{numel(seq)+1}.name = 'f_XY8';
+seq{numel(seq)}.interval = '72';
+seq{numel(seq)}.FROM1 = '0';
+seq{numel(seq)}.TO1 = '13';
+seq{numel(seq)}.SweepNPoints= '12';
+
+seq{numel(seq)+1}.name = 'f_XY8';
+seq{numel(seq)}.interval = '80';
+seq{numel(seq)}.FROM1 = '0';
+seq{numel(seq)}.TO1 = '13';
+seq{numel(seq)}.SweepNPoints= '12';
+
+seq{numel(seq)+1}.name = 'f_XY8';
+seq{numel(seq)}.interval = '88';
+seq{numel(seq)}.FROM1 = '0';
+seq{numel(seq)}.TO1 = '12';
+seq{numel(seq)}.SweepNPoints= '13';
+
+seq{numel(seq)+1}.name = 'f_XY8';
+seq{numel(seq)}.interval = '96';
+seq{numel(seq)}.FROM1 = '0';
+seq{numel(seq)}.TO1 = '12';
+seq{numel(seq)}.SweepNPoints= '13';
+
+seq{numel(seq)+1}.name = 'f_XY8';
+seq{numel(seq)}.interval = '104';
+seq{numel(seq)}.FROM1 = '0';
+seq{numel(seq)}.TO1 = '12';
+seq{numel(seq)}.SweepNPoints= '13';
+
+seq{numel(seq)+1}.name = 'f_XY8';
+seq{numel(seq)}.interval = '112';
+seq{numel(seq)}.FROM1 = '0';
+seq{numel(seq)}.TO1 = '12';
+seq{numel(seq)}.SweepNPoints= '13';
+
+seq{numel(seq)+1}.name = 'f_XY8';
+seq{numel(seq)}.interval = '120';
+seq{numel(seq)}.FROM1 = '0';
+seq{numel(seq)}.TO1 = '12';
+seq{numel(seq)}.SweepNPoints= '13';
+
+seq{numel(seq)+1}.name = 'f_XY8';
+seq{numel(seq)}.interval = '128';
+seq{numel(seq)}.FROM1 = '0';
+seq{numel(seq)}.TO1 = '12';
+seq{numel(seq)}.SweepNPoints= '13';
+end
+

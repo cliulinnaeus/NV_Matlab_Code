@@ -23,14 +23,17 @@ switch what
         path='com10';
     case 'meas'
         path='SPCM';
+        %path='APD';
     case 'meas2'
-        path='PD0';      
+        path='PD0 not connected';      
     case 'meas3'
-        path='PD1';
+        path='PD1 not connected';
     case 'SPCM'
         path='/Dev1/PFI0';
     case 'gConfocal path'
         path='C:\MATLAB_Code\Sets\';
+    case 'APD in'
+        path='Dev1/ai2';
     case 'PD0 in'
         path='Dev1/ai0';
     case 'PD1 in'
@@ -77,4 +80,8 @@ switch what
         path='USB0::0x05E6::0x2200::9201316::INSTR';
     case 'keithleyZ'
         path='USB0::0x05E6::0x2200::9201315::INSTR';
+    case 'FPGA Host'
+        path = '192.168.0.234';
+    case 'FPGA Port'
+        path = 8080;
 end

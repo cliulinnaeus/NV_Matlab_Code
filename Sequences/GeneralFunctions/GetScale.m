@@ -1,5 +1,5 @@
 function [ScaleT, ScaleStr] = GetScale(tmax)
-if tmax > 0 && tmax <= 100e-3
+if tmax >= 0 && tmax <= 100e-3
     ScaleT = 1e3;
     ScaleStr = 'ps';
 elseif tmax > 100e-3 && tmax <= 100

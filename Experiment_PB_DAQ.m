@@ -22,7 +22,7 @@ function varargout = Experiment_PB_DAQ(varargin)
 
 % Edit the above text to modify the response to help Experiment_PB_DAQ
 
-% Last Modified by GUIDE v2.5 15-Aug-2024 13:06:20
+% Last Modified by GUIDE v2.5 04-Nov-2024 20:31:01
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -2318,4 +2318,359 @@ function saveRaw_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of saveRaw
 
 
+% --- Executes on button press in fpga_connect.
+function fpga_connect_Callback(hObject, eventdata, handles)
+% hObject    handle to fpga_connect (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global fpga
+if isempty(fpga.client_socket) || isempty(fpga)
+    fpga = FPGA_AWG_Client();
+    msg = fpga.connect(PortMap('FPGA Host'),PortMap('FPGA Port'));
+    handles.fpga_ack_str.String = msg;
+else
+    msg = "FPGA is already connected.";
+    handles.fpga_ack_str.String = msg;
+end
 
+
+
+% --- Executes on button press in fpga_disconnect.
+function fpga_disconnect_Callback(hObject, eventdata, handles)
+% hObject    handle to fpga_disconnect (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global fpga
+if ~isempty(fpga.client_socket)
+    msg = fpga.disconnect();
+    handles.fpga_ack_str.String = msg;
+else
+    msg = "FPGA is already disconnected.";
+    handles.fpga_ack_str.String = msg;
+end
+
+
+
+
+function FPGAFreq7_Callback(hObject, eventdata, handles)
+% hObject    handle to FPGAFreq7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of FPGAFreq7 as text
+%        str2double(get(hObject,'String')) returns contents of FPGAFreq7 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function FPGAFreq7_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to FPGAFreq7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function FPGAGain7_Callback(hObject, eventdata, handles)
+% hObject    handle to FPGAGain7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of FPGAGain7 as text
+%        str2double(get(hObject,'String')) returns contents of FPGAGain7 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function FPGAGain7_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to FPGAGain7 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in fpga_get_waveform_lsit.
+function fpga_get_waveform_lsit_Callback(hObject, eventdata, handles)
+% hObject    handle to fpga_get_waveform_lsit (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global fpga
+if ~isempty(fpga.client_socket)
+    msg = fpga.get_waveform_lst();
+    handles.fpga_ack_str.String = msg;
+else
+    handles.fpga_ack_str.String = "FPGA is not connected.";
+end
+
+
+% --- Executes on button press in fpga_get_program_list.
+function fpga_get_program_list_Callback(hObject, eventdata, handles)
+% hObject    handle to fpga_get_program_list (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global fpga
+if ~isempty(fpga.client_socket)
+    msg = fpga.get_program_lst();
+    handles.fpga_ack_str.String = msg;
+else
+    handles.fpga_ack_str.String = "FPGA is not connected.";
+end
+
+% --- Executes on button press in fpga_get_envelope_list.
+function fpga_get_envelope_list_Callback(hObject, eventdata, handles)
+% hObject    handle to fpga_get_envelope_list (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global fpga
+if ~isempty(fpga.client_socket)
+    msg = fpga.get_envelope_lst();
+    handles.fpga_ack_str.String = msg;
+else
+    handles.fpga_ack_str.String = "FPGA is not connected.";
+end
+
+
+% --- Executes on button press in fpga_get_state.
+function fpga_get_state_Callback(hObject, eventdata, handles)
+% hObject    handle to fpga_get_state (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global fpga
+if ~isempty(fpga.client_socket)
+    msg = fpga.get_state();
+    handles.fpga_ack_str.String = msg;
+else
+    handles.fpga_ack_str.String = "FPGA is not connected.";
+end
+
+
+
+function post_init_wait_Callback(hObject, eventdata, handles)
+% hObject    handle to post_init_wait (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of post_init_wait as text
+%        str2double(get(hObject,'String')) returns contents of post_init_wait as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function post_init_wait_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to post_init_wait (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function post_MW_wait_Callback(hObject, eventdata, handles)
+% hObject    handle to post_MW_wait (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of post_MW_wait as text
+%        str2double(get(hObject,'String')) returns contents of post_MW_wait as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function post_MW_wait_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to post_MW_wait (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function edit148_Callback(hObject, eventdata, handles)
+% hObject    handle to edit148 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of edit148 as text
+%        str2double(get(hObject,'String')) returns contents of edit148 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function edit148_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to edit148 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function FPGAFreq6_Callback(hObject, eventdata, handles)
+% hObject    handle to FPGAFreq6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of FPGAFreq6 as text
+%        str2double(get(hObject,'String')) returns contents of FPGAFreq6 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function FPGAFreq6_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to FPGAFreq6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function FPGAFreq5_Callback(hObject, eventdata, handles)
+% hObject    handle to FPGAFreq5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of FPGAFreq5 as text
+%        str2double(get(hObject,'String')) returns contents of FPGAFreq5 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function FPGAFreq5_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to FPGAFreq5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function FPGAFreq4_Callback(hObject, eventdata, handles)
+% hObject    handle to FPGAFreq4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of FPGAFreq4 as text
+%        str2double(get(hObject,'String')) returns contents of FPGAFreq4 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function FPGAFreq4_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to FPGAFreq4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function FPGAGain6_Callback(hObject, eventdata, handles)
+% hObject    handle to FPGAGain6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of FPGAGain6 as text
+%        str2double(get(hObject,'String')) returns contents of FPGAGain6 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function FPGAGain6_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to FPGAGain6 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function FPGAGain5_Callback(hObject, eventdata, handles)
+% hObject    handle to FPGAGain5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of FPGAGain5 as text
+%        str2double(get(hObject,'String')) returns contents of FPGAGain5 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function FPGAGain5_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to FPGAGain5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function FPGAGain4_Callback(hObject, eventdata, handles)
+% hObject    handle to FPGAGain4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of FPGAGain4 as text
+%        str2double(get(hObject,'String')) returns contents of FPGAGain4 as a double
+
+
+% --- Executes during object creation, after setting all properties.
+function FPGAGain4_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to FPGAGain4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in AutoRun.
+function AutoRun_Callback(hObject, eventdata, handles)
+% hObject    handle to AutoRun (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+ExperimentFunctionPool('AutoRun',hObject, eventdata, handles)
+
+
+% --- Executes on button press in StopAuto.
+function StopAuto_Callback(hObject, eventdata, handles)
+% hObject    handle to StopAuto (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+global gmSEQ
+gmSEQ.bAutoRun=0;

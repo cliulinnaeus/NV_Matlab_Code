@@ -1,0 +1,1 @@
+{"name":"echo","prog_structure":{"ch1":"[X+half,5000,X+,5000,X-half]","ch2":"[X+half,5000,X-half]"}}

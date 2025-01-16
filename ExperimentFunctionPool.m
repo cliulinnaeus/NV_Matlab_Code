@@ -33,6 +33,37 @@ switch what
         AutoCalibration(hObject, eventdata, handles, varargin{1});
     case 'RabiTrack'
         RabiTrack(hObject, eventdata, handles);
+    case 'AutoRun'
+        gmSEQ.bAutoRun = 1;
+        seq = getAutoPara;
+        
+        num_seq = numel(seq);
+        for i_seq = 1:num_seq
+            fld = fieldnames(seq{i_seq});
+            num_para = numel(fld);
+            for i_para = 1: num_para
+                if strcmp(fld{i_para},'name')
+                    handles.sequence.Value = 1; 
+                    handles.sequence.String = {seq{i_seq}.(fld{i_para})};
+                    gmSEQ.name = {seq{i_seq}.(fld{i_para})};
+                elseif ~isnumeric(seq{i_seq}.(fld{i_para}))
+                    set(handles.(fld{i_para}),'String',seq{i_seq}.(fld{i_para}))
+                else
+                    set(handles.(fld{i_para}),'Value',seq{i_seq}.(fld{i_para}))
+                end
+            end
+            Auto_LoadUserInputs(hObject,eventdata,handles);
+            RunSequence(hObject, eventdata, handles);
+            
+            filename = strcat("C:\Users\dilution_fridge_2\Desktop\",string(datetime('now','Format', 'yyyy-MM-dd_HH-mm-ss')),".png");
+            imwrite(getframe(handles.figure1).cdata, filename)
+            if ~gmSEQ.bAutoRun
+                disp('AutoRun is stopped.')
+                return
+            end
+            disp('AutoRun is completed.')
+        end
+        
     otherwise
         disp('No Matches found in Pool Function');
 end
@@ -63,9 +94,21 @@ LioPB.OnOff(7) = (get(handles.LioPB6,'Value'));
 LioPB.PBN(8) = 7;
 LioPB.OnOff(8) = (get(handles.LioPB7,'Value'));
 
+LioPB.PBN(9) = 8;
+LioPB.OnOff(9) = 0;
+
+LioPB.PBN(10) = 9;
+LioPB.OnOff(10) = 0;
+
+LioPB.PBN(11) = 10;
+LioPB.OnOff(11) = (get(handles.LioPB7,'Value'));
+
+LioPB.PBN(12) = 11;
+LioPB.OnOff(12) = (get(handles.LioPB7,'Value'));
+
 %Binary number
 OutPuts = 0;
-for ipbn = 1:8
+for ipbn = 1:12
     OutPuts = OutPuts + LioPB.OnOff(ipbn)*2^(LioPB.PBN(ipbn));
 end
 
@@ -77,7 +120,7 @@ OutPuts = 0;
 PBFunctionPool('PBON',OutPuts);
 
 function Initialize(hObject, eventdata, handles)
-global gmSEQ gSG gSG2 gSG3
+global gmSEQ gSG gSG2 gSG3 fpga
 
 StrL = SequencePool('PopulateSeq');
 set(handles.sequence,'String',StrL);
@@ -102,6 +145,7 @@ gSG.bMod='IQ';
 gSG.bModSrc='External';
 SignalGeneratorFunctionPool('SetMod');
 
+fpga = FPGA_AWG_Client();
 
 % gSG2.bMod='IQ';
 % gSG2.bModSrc='External';
@@ -169,7 +213,6 @@ switch gmSEQ.name{1}
         end
 end
 
-
 function LoadUserInputs(hObject,eventdata,handles)
 global gmSEQ gSG gSG2 gSG3
 % gmSEQ.MWAWG = 1; % cardNum
@@ -213,6 +256,8 @@ gmSEQ.CtrGateDur=str2double(get(handles.CtrGateDur,'String'));
 gmSEQ.bWarmUpAOM=get(handles.bWarmUpAOM,'Value');
 gmSEQ.bTrack=get(handles.bTrack,'Value');
 gmSEQ.saveRaw = get(handles.saveRaw,'Value');
+gmSEQ.post_init_wait = str2double(get(handles.post_init_wait,'String'));
+gmSEQ.post_MW_wait = str2double(get(handles.post_MW_wait,'String'));
 
 gSG.Pow = str2double(get(handles.fixPow, 'String'));
 gSG.Freq = str2double(get(handles.fixFreq, 'String'))*1e9;
@@ -224,20 +269,31 @@ gSG.AWGFreq = str2double(get(handles.AWGFreq, 'String'));
 gSG.AWGAmp = str2double(get(handles.AWGAmp, 'String'));
 gmSEQ.P1Pulse = str2double(get(handles.P1Pulse, 'String'));
 
+gSG.FPGAFreq7 = str2double(get(handles.FPGAFreq7, 'String'));
+gSG.FPGAGain7 = round(str2double(get(handles.FPGAGain7, 'String'))/100*(2^15-1)); %convert to gain in the fpga awg
+gSG.FPGAFreq6 = str2double(get(handles.FPGAFreq6, 'String'));
+gSG.FPGAGain6 = round(str2double(get(handles.FPGAGain6, 'String'))/100*(2^15-1)); %convert to gain in the fpga awg
+gSG.FPGAFreq5 = str2double(get(handles.FPGAFreq5, 'String'));
+gSG.FPGAGain5 = round(str2double(get(handles.FPGAGain5, 'String'))/100*(2^15-1)); %convert to gain in the fpga awg
+gSG.FPGAFreq4 = str2double(get(handles.FPGAFreq4, 'String'));
+gSG.FPGAGain4 = round(str2double(get(handles.FPGAGain4, 'String'))/100*(2^15-1)); %convert to gain in the fpga awg
+
+
+
 % Point number for next tracking
 gmSEQ.TrackPointN = str2double(get(handles.TrackPointN, 'String'));
 
 % Second SG (for DEER etc)
-gSG2.Freq = str2double(get(handles.fixFreq2, 'String'))*1e9;
-gSG2.Pow = str2double(get(handles.fixPow2, 'String'));
-gSG2.AWGFreq = str2double(get(handles.AWGFreq2, 'String'));
-gSG2.AWGAmp = str2double(get(handles.AWGAmp2, 'String'));
+% gSG2.Freq = str2double(get(handles.fixFreq2, 'String'))*1e9;
+% gSG2.Pow = str2double(get(handles.fixPow2, 'String'));
+% gSG2.AWGFreq = str2double(get(handles.AWGFreq2, 'String'));
+% gSG2.AWGAmp = str2double(get(handles.AWGAmp2, 'String'));
 
 % Third SG (for double quantum basis etc)
-gSG3.Freq = str2double(get(handles.fixFreq3, 'String'))*1e9;
-gSG3.Pow = str2double(get(handles.fixPow3, 'String'));
-gSG3.AWGFreq = str2double(get(handles.AWGFreq3, 'String'));
-gSG3.AWGAmp = str2double(get(handles.AWGAmp3, 'String'));
+% gSG3.Freq = str2double(get(handles.fixFreq3, 'String'))*1e9;
+% gSG3.Pow = str2double(get(handles.fixPow3, 'String'));
+% gSG3.AWGFreq = str2double(get(handles.AWGFreq3, 'String'));
+% gSG3.AWGAmp = str2double(get(handles.AWGAmp3, 'String'));
 
 % check the ACmodAWG mode, add by Chong on 10/6/2020
 % if not using ACmodAWG, this must be unchecked, else gSG.Freq = gSG.Freq -
@@ -261,25 +317,25 @@ gmSEQ.DEERt = str2double(get(handles.DEERt, 'String'));
 %gSG.IQVoltage1 = 1; % 1 is approximate 0.4 V in AWG output. Yuanqi
 
 % Adding by Chong on 10/5/2020 for many-body cooling
-gmSEQ.SAmp1 = str2double(get(handles.SAmp1, 'String'));
-gmSEQ.SAmp2 = str2double(get(handles.SAmp2, 'String'));
-gmSEQ.SLockT1 = str2double(get(handles.SLockT1, 'String'));
-gmSEQ.SLockT2 = str2double(get(handles.SLockT2, 'String'));
-gmSEQ.LockN0 = str2double(get(handles.LockN0, 'String'));
-gmSEQ.SAmp1_M = str2double(get(handles.SAmp1_M, 'String'));
-gmSEQ.SAmp2_M = str2double(get(handles.SAmp2_M, 'String'));
-gmSEQ.SLockT1_M = str2double(get(handles.SLockT1_M, 'String'));
-gmSEQ.SLockT2_M = str2double(get(handles.SLockT2_M, 'String'));
-gmSEQ.CoolCycle = str2double(get(handles.CoolCycle, 'String'));
-gmSEQ.CoolSwitch = str2double(get(handles.CoolSwitch, 'String'));
-gmSEQ.CoolWait = str2double(get(handles.CoolWait, 'String'));
-gmSEQ.Alternate = get(handles.Alternate,'Value'); % Alternate between cooling and heating.
-gmSEQ.SweepDelta = get(handles.SweepDelta,'Value');
-gmSEQ.Ref = get(handles.Ref,'Value');
-gmSEQ.bCali = get(handles.bCali,'Value');
-gmSEQ.CaliN = str2double(get(handles.CaliN, 'String'));
-gmSEQ.LaserCooling = str2double(get(handles.LaserCooling, 'String'));
-gmSEQ.LaserDet = str2double(get(handles.LaserDet, 'String'));
+%gmSEQ.SAmp1 = str2double(get(handles.SAmp1, 'String'));
+%gmSEQ.SAmp2 = str2double(get(handles.SAmp2, 'String'));
+%gmSEQ.SLockT1 = str2double(get(handles.SLockT1, 'String'));
+%gmSEQ.SLockT2 = str2double(get(handles.SLockT2, 'String'));
+%gmSEQ.LockN0 = str2double(get(handles.LockN0, 'String'));
+%gmSEQ.SAmp1_M = str2double(get(handles.SAmp1_M, 'String'));
+%gmSEQ.SAmp2_M = str2double(get(handles.SAmp2_M, 'String'));
+%gmSEQ.SLockT1_M = str2double(get(handles.SLockT1_M, 'String'));
+%gmSEQ.SLockT2_M = str2double(get(handles.SLockT2_M, 'String'));
+%gmSEQ.CoolCycle = str2double(get(handles.CoolCycle, 'String'));
+%gmSEQ.CoolSwitch = str2double(get(handles.CoolSwitch, 'String'));
+%gmSEQ.CoolWait = str2double(get(handles.CoolWait, 'String'));
+%gmSEQ.Alternate = get(handles.Alternate,'Value'); % Alternate between cooling and heating.
+%gmSEQ.SweepDelta = get(handles.SweepDelta,'Value');
+%gmSEQ.Ref = get(handles.Ref,'Value');
+%gmSEQ.bCali = get(handles.bCali,'Value');
+%gmSEQ.CaliN = str2double(get(handles.CaliN, 'String'));
+%gmSEQ.LaserCooling = str2double(get(handles.LaserCooling, 'String'));
+%gmSEQ.LaserDet = str2double(get(handles.LaserDet, 'String'));
 
 % % for spin diffusion measurement, add by Chong 3/28/2017
 % gmSEQ.Diffwait = str2double(get(handles.Diffwait, 'String'));
@@ -322,14 +378,7 @@ end
 
 
 gmSEQ.bCust = get(handles.useCustPoints,'Value');
-if gmSEQ.bCust
-    gmSEQ.SweepParam = linspace(1e6, 1e11+1e6, 3);
-    disp("Customized input, GUI values are overwritten.")
-end
-
 gmSEQ.measPD = get(handles.bSavePDVoltage,'Value');
-
-
 
 function PlotExtRaw(hObject,eventdata,handles)
 global gmSEQ ScaleT ScaleStr
@@ -349,8 +398,6 @@ end
 ylabel('Fluorescence counts');
 xlabel(ScaleStr);
 hold('off')
-
-
 
 function PlotExt(hObject,eventdata,handles)
 global gmSEQ ScaleT ScaleStr
@@ -440,98 +487,6 @@ ref_err = sqrt((ref_B_err .* ref_B).^2 + (ref_D_err .* ref_D).^2)./(ref_B + ref_
 sig_err = sqrt((sig_B_err .* sig_B).^2 + (sig_D_err .* sig_D).^2)./(sig_B - sig_D);
 rel_err = sqrt(ref_err.^2 + sig_err.^2);
 data_err = rel_err .* data;
-
-
-function SaveData(handles)
-global gSaveData gmSEQ  gSG
-%global gScan
-now = clock;
-date = [num2str(now(1)),'-',num2str(now(2)),'-',num2str(round(now(3)))];
-fullPath=fullfile('D:\Data\',date,'\');
-if ~exist(fullPath,'dir')
-    mkdir(fullPath);
-end
-gSaveData.path = fullPath;
-
-
-gSaveData.file = ['_' date '.txt'];
-name=regexprep(gmSEQ.name,'\W',''); % rewrite the sequence name without spaces/weird characters
-%File name and prompt
-B=fullfile(gSaveData.path, strcat(name, gSaveData.file));
-file = strcat(name, gSaveData.file);
-
-%Prevent overwriting
-mfile = strrep(B,'.txt','*');
-mfilename = strrep(gSaveData.file,'.txt','');
-
-A = ls(char(mfile));
-ImgN = 0;
-for f = 1:size(A,1)
-    sImgN = sscanf(A(f,:),strcat(name, string(mfilename), '_%d.txt'));
-    if ~isempty(sImgN)
-        if sImgN > ImgN
-            ImgN = sImgN;
-        end
-    end
-end
-ImgN = ImgN + 1;
-file = strrep(file,'.txt',sprintf('_%03d.txt',ImgN));
-final= fullfile(gSaveData.path, file);
-%Save File as Data
-fnSEQ=fieldnames(gmSEQ);
-fnSG=fieldnames(gSG);
-
-fid = fopen(string(final),'wt');
-fprintf(fid,'Sweep vector\n');
-fprintf(fid,'%d\t',gmSEQ.SweepParam);
-fprintf(fid, '\n');
-fprintf(fid, '\n');
-
-fprintf(fid,'Signal vector\n');
-fprintf(fid,'%d\t',gmSEQ.signal);
-fprintf(fid, '\n');
-fprintf(fid, '\n');
-
-fprintf(fid,'Reference vector\n');
-fprintf(fid,'%d\t',gmSEQ.reference);
-fprintf(fid, '\n');
-fprintf(fid, '\n');
-
-%fprintf(fid, 'Galvo Position: Vx = %.4f Vy = %.4f Vz = %.4f\n',[gScan.FixVx gScan.FixVy gScan.FixVz]);
-
-fprintf(fid,'SEQUENCE PARAMETERS');
-fprintf(fid, '\n'); 
-fprintf(fid, '\n'); 
-
-for i=1:length(fnSEQ)
-    st=fnSEQ(i);
-    if ~strcmp(st,'CHN') &&~strcmp(st,'SweepParam')&&~strcmp(st,'reference')&&~strcmp(st,'signal')
-        fprintf(fid,string(st));
-        fprintf(fid, '\n');      
-        fprintf(fid,string(gmSEQ.(char(st))));
-        fprintf(fid, '\n');        
-        fprintf(fid, '\n'); 
-    end
-end
-
-fprintf(fid,'SIGNAL GENERATOR PARAMETERS');
-fprintf(fid, '\n'); 
-fprintf(fid, '\n'); 
-
-for i=1:length(fnSG)
-    st=fnSG(i);
-    if ~strcmp(st,'serial')&&~strcmp(st,'qErr')
-        fprintf(fid,string(st));
-        fprintf(fid, '\n');      
-        fprintf(fid,string(gSG.(char(st))));
-        fprintf(fid, '\n');        
-        fprintf(fid, '\n'); 
-    end
-end
-
-fclose(fid);
-
-handles.textFileName.String = file;
 
 function RunFirstPoint(hObject, eventdata, handles)
 global gSG gmSEQ

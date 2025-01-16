@@ -10,7 +10,7 @@ switch varargin{1}
     case 'WriteVoltages'
         [varargout{1}] = WriteVoltages(varargin{2},varargin{3});
     case 'CreateAIChannel'
-        [varargout{1},varargout{2}] = CreateAIChannel(varargin{2},varargin{3},varargin{4},varargin{5});
+        [varargout{1},varargout{2}] = CreateAIChannel(varargin{2},varargin{3},varargin{4}, varargin{5});
     case 'ReadVoltageScalar'
         [varargout{1}] = ReadVoltageScalar(varargin{2});
     case 'WriteDigitalChannel'
@@ -399,6 +399,11 @@ DAQmxErr(status);
 
 
 %add the channels to read one by one
+if strcmp(PortMap('meas'), 'APD')
+    status = DAQmxCreateAIVoltageChan(hRead,PortMap('APD in'),'',...
+        DAQmx_Val_diff, -5,5, DAQmx_Val_Volts,[]);
+end
+
 if strcmp(PortMap('meas2'), 'PD0')
     status = DAQmxCreateAIVoltageChan(hRead,PortMap('PD0 in'),'',...
         DAQmx_Val_diff, -5,5, DAQmx_Val_Volts,[]);

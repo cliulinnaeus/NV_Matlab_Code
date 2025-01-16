@@ -38,12 +38,12 @@ gmSEQ.CHN(numel(gmSEQ.CHN)).T = [0, ...
     T_initial_wait + gmSEQ.readout + T_AfterLaser + gmSEQ.To + T_AfterPulse];
 gmSEQ.CHN(numel(gmSEQ.CHN)).DT = [1000, 1000];
 
-gmSEQ.CHN(numel(gmSEQ.CHN) + 1).PBN = 9; %time tagger trigger
-gmSEQ.CHN(numel(gmSEQ.CHN) ).NRise = 2;
+%gmSEQ.CHN(numel(gmSEQ.CHN) + 1).PBN = 9; %time tagger trigger
+%gmSEQ.CHN(numel(gmSEQ.CHN) ).NRise = 2;
 % gmSEQ.CHN(1).T = [gmSEQ.readout - gmSEQ.CtrGateDur - 1000, ...
 %     gmSEQ.readout + T_AfterLaser + gmSEQ.To + T_AfterPulse];
-gmSEQ.CHN(numel(gmSEQ.CHN) ).T = [T_initial_wait-1000, ...
-    T_initial_wait + gmSEQ.readout + T_AfterLaser + gmSEQ.To + T_AfterPulse-1000];
-gmSEQ.CHN(numel(gmSEQ.CHN) ).DT = [gmSEQ.CtrGateDur, gmSEQ.CtrGateDur];
+%gmSEQ.CHN(numel(gmSEQ.CHN) ).T = [T_initial_wait-1000, ...
+%    T_initial_wait + gmSEQ.readout + T_AfterLaser + gmSEQ.To + T_AfterPulse-1000];
+%gmSEQ.CHN(numel(gmSEQ.CHN) ).DT = [gmSEQ.CtrGateDur, gmSEQ.CtrGateDur];
 
 ApplyDelays();

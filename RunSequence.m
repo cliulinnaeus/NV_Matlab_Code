@@ -1,21 +1,33 @@
 function RunSequence(hObject, eventdata, handles)
 [y,Fs] = audioread('ExptCompleted.mp3');
 BackupFile = 'C:\MATLAB_Code\Data\TempDataBackup\Temp.mat';
-global gmSEQ gSG tmax hCPS gSG2 gSG3    % frequency information is already input - 1
+global gmSEQ gSG tmax hCPS gSG2 gSG3 fpga
 
-% Stop the previous sequence if it is running
-% if gmSEQ.bExp
-%     error("Previous experiment is running. Please first stop previous experiment.");
-% end
+%connect to fpga if not already connected
+Set_FPGA_GUI_buttons(handles, 'on')
+if isempty(fpga.client_socket)
+    fpga = FPGA_AWG_Client();
+    msg = fpga.connect(PortMap('FPGA Host'),PortMap('FPGA Port'));
+    handles.fpga_ack_str.String = msg;
+end
+
+fpga.delete_all_envelope_data();
+fpga.delete_all_waveform_cfg();
+fpga.delete_all_programs();
+% set trigger
+fpga.set_trigger_mode('external');
 
 % default setting
 gmSEQ.bRaman = 0;
-
 gmSEQ.bGo = 1;
 gmSEQ.bExp = 1; % experiment status tag
 getUserInputFromGUI(handles);
 SequencePool(string(gmSEQ.name))
 InitializeData(handles);
+
+%%% init fpga
+fpga_in_use = isfield(gmSEQ,'use_fpga') && gmSEQ.use_fpga == 1 ;
+
 
 disp(strcat('Commencing ',{' '},string(gmSEQ.name), ' sequence...'))
 set(handles.runningText,'string','Running')
@@ -26,7 +38,8 @@ gmSEQ.bRandom = 0;  % Shuffle the input, added by Weijie 04/20/2022
 if gSG.bfixedPow && gSG.bfixedFreq %pulsed seq
     CreateSavePath_Ave()
     
-    gmSEQ.bTomo = gmSEQ.Alternate;
+    %gmSEQ.bTomo = gmSEQ.Alternate;
+    gmSEQ.bTomo = 0;
     if gmSEQ.bTomo
         gmSEQ.dataN = gmSEQ.Ntomo*gmSEQ.ctrN;
         disp("Tomographical measurement ongoing...")
@@ -50,12 +63,16 @@ if gSG.bfixedPow && gSG.bfixedFreq %pulsed seq
     gmSEQ.signal_Ave = NaN(gmSEQ.dataN*(numPDChan+1), gmSEQ.NSweepParam);
     gmSEQ.signal = NaN(gmSEQ.dataN*(numPDChan+1), gmSEQ.NSweepParam);
     
+    %%% if use fpga this is not needed, freq and amp will be imported
+    %%% through the sequence_name.m
+    %%% TODO: add a button for turning on the FPGA. If using FPGA, skip the
+    %%% following lines
     gmSEQ.refCounts=Track('Init');
     SignalGeneratorFunctionPool('SetMod');
     SignalGeneratorFunctionPool('WritePow');
     SignalGeneratorFunctionPool('WriteFreq');
     gSG.bOn=1;  SignalGeneratorFunctionPool('RFOnOff');
-    
+
     CreateCaliLog(hObject, eventdata, handles);
     
     if gmSEQ.bRandom
@@ -63,6 +80,7 @@ if gSG.bfixedPow && gSG.bfixedFreq %pulsed seq
     end
     
     try
+        Set_FPGA_GUI_buttons(handles, 'off')
         %DAQmxResetDevice('Dev1');
         [~, hCounter0] = SetNCounters(0,1*gmSEQ.ctrN*gmSEQ.Repeat,PortMap('Ctr Gate'),500000);
         %         [~, hCounter1] = SetNCounters(1,1*gmSEQ.ctrN*gmSEQ.Repeat,PortMap('Ctr Gate'),500000);
@@ -133,17 +151,27 @@ if gSG.bfixedPow && gSG.bfixedFreq %pulsed seq
                     end
                     PBFunctionPool('PreprocessPBSequence',gmSEQ); % todo: account for ns
                     
+                    
+                    
                     %%%
                     StartCounters(hCounter0);
                     if gmSEQ.measPD;StartCounters(hCounterPD0);end
                     %                     StartCounters(hCounter2);
                     %                     StartCounters(hCounter3);
+                    fpga.start_program(string(gmSEQ.name));
+                    %handles.fpga_ack_str = msg;
+                    pause(0.1)
                     Run_PB_Sequence();
+                    
                     [~, vec0] = ReadCountersN(hCounter0,(1*gmSEQ.ctrN*gmSEQ.Repeat),gmSEQ.Repeat*tmax/1e9*1.5);
                     if gmSEQ.measPD;[~, vec1] = ReadCountersPD(hCounterPD0,(1*gmSEQ.ctrN*gmSEQ.Repeat),gmSEQ.Repeat*tmax/1e9*1.5,numPDChan);end
                     %                     [~, vec2] = ReadCountersN(hCounter2,(1*gmSEQ.ctrN*gmSEQ.Repeat),gmSEQ.Repeat*tmax/1e9*1.5);
                     %                     [~, vec3] = ReadCountersN(hCounter3,(1*gmSEQ.ctrN*gmSEQ.Repeat),gmSEQ.Repeat*tmax/1e9*1.5);
                     DAQmxStopTask(hCounter0);
+                    
+                    %%% fpga stop program
+                    pause(0.1)
+                    fpga.stop_program();
                     if gmSEQ.measPD;DAQmxStopTask(hCounterPD0);end
                     %                     DAQmxStopTask(hCounter2);
                     %                     DAQmxStopTask(hCounter3);
@@ -219,20 +247,23 @@ if gSG.bfixedPow && gSG.bfixedFreq %pulsed seq
                 break
             end
         end
+        Set_FPGA_GUI_buttons(handles, 'on');
         ClearCounters(hCounter0);
         if gmSEQ.measPD;ClearCounters(hCounterPD0);end
         %         ClearCounters(hCounter2);
         %         ClearCounters(hCounter3);
     catch ME
-        KillAllTasks;
+        KillAllTasks; %kill all niDAQ tasks
+        set(handles.runningText,'string','Error!')
         gSG.bOn=0; SignalGeneratorFunctionPool('RFOnOff');
+        fpga.stop_program();
+        Set_FPGA_GUI_buttons(handles, 'on')
         rethrow(ME);
     end
     if gmSEQ.bTrack
         PBFunctionPool('PBON',2^SequencePool('PBDictionary','AOM'));
     end
     
-    %gSG.bOn=0; SignalGeneratorFunctionPool('RFOnOff');
     
 elseif isfield(gmSEQ,'bLiO')   % activates for ESR
     CreateSavePath_Ave()
@@ -311,6 +342,7 @@ elseif isfield(gmSEQ,'bLiO')   % activates for ESR
         KillAllTasks;
         gSG.bOn=0; SignalGeneratorFunctionPool('RFOnOff');
         %gSG2.bOn=0; SignalGeneratorFunctionPool2('RFOnOff');
+        set(handles.runningText,'string','Error!')
         rethrow(ME);
     end
     if ~gmSEQ.bTrack
@@ -425,6 +457,7 @@ elseif gSG.bfixedPow && ~gSG.bfixedFreq % for ODMR
     catch ME
         KillAllTasks;
         gSG.bOn=0; SignalGeneratorFunctionPool('RFOnOff');
+        set(handles.runningText,'string','Error!')
         rethrow(ME);
     end
 end
@@ -446,22 +479,23 @@ SaveIgorText(handles);
 disp('Experiment completed!')
 set(handles.runningText,'string','Stopped')
 %sound(y,Fs);
-%SaveData;
 
 function getUserInputFromGUI(handles)
-global gmSEQ gSG gSG2 gSG3
+global gmSEQ
 
 % for two sweeping range, with option for log10 sampling
 % Add by C. Zu on 9/29/2020
-if (gmSEQ.bSweep1log)
-    gmSEQ.SweepParam=logspace(log10(gmSEQ.From),log10(gmSEQ.To),gmSEQ.N);
+if get(handles.bSweep1log,'Value')
+    gmSEQ.SweepParam=round(logspace(log10(gmSEQ.From),log10(gmSEQ.To),gmSEQ.N));
+    gmSEQ.SweepParam = unique(gmSEQ.SweepParam,'first'); %remove repeating elements
 else
     gmSEQ.SweepParam=linspace(gmSEQ.From,gmSEQ.To,gmSEQ.N);
 end
 
 if (gmSEQ.bSweep2)
     if (gmSEQ.bSweep2log)
-        gmSEQ.SweepParam=[gmSEQ.SweepParam logspace(log10(gmSEQ.From2),log10(gmSEQ.To2),gmSEQ.N2)];
+        gmSEQ.SweepParam=round([gmSEQ.SweepParam logspace(log10(gmSEQ.From2),log10(gmSEQ.To2),gmSEQ.N2)]);
+        gmSEQ.SweepParam = unique(gmSEQ.SweepParam,'first'); %remove repeating elements
     else
         gmSEQ.SweepParam=[gmSEQ.SweepParam linspace(gmSEQ.From2,gmSEQ.To2,gmSEQ.N2)];
     end
@@ -469,7 +503,8 @@ end
 
 if (gmSEQ.bSweep3)
     if (gmSEQ.bSweep3log)
-        gmSEQ.SweepParam=[gmSEQ.SweepParam logspace(log10(gmSEQ.From3),log10(gmSEQ.To3),gmSEQ.N3)];
+        gmSEQ.SweepParam=round([gmSEQ.SweepParam logspace(log10(gmSEQ.From3),log10(gmSEQ.To3),gmSEQ.N3)]);
+        gmSEQ.SweepParam = unique(gmSEQ.SweepParam,'first'); %remove repeating elements
     else
         gmSEQ.SweepParam=[gmSEQ.SweepParam linspace(gmSEQ.From3,gmSEQ.To3,gmSEQ.N3)];
     end
@@ -480,8 +515,10 @@ end
 gmSEQ.bCust = get(handles.useCustPoints,'Value');
 if gmSEQ.bCust
     % gmSEQ.SweepParam = [linspace(0.900,0.928, 15), linspace(0.930,0.969,40), linspace(0.970, 1.018, 25), linspace(1.020, 1.069, 51),  linspace(1.070, 1.100, 16)];
-    gmSEQ.SweepParam = [linspace(1e7, 5e7, 4), linspace(1e8, 2e9, 10)];
-    gmSEQ.SweepParam = [linspace(1.50, 1.70, 201), linspace(4.00, 4.20, 201)];
+    aaa = linspace(6,206,51);
+    aaa(end) = [];
+    bbb = linspace(206,606,21);
+    gmSEQ.SweepParam = [aaa bbb];
     % gmSEQ.SweepParam = [linspace(50, 20050, 5), linspace(40000, 100000, 4), linspace(150000, 400000, 6), linspace(500000, 800000, 4)];
     % Seq F 100 ns
     % gmSEQ.SweepParam = [linspace(0, 20, 6), linspace(30, 60, 4), linspace(80, 200, 7), linspace(240, 400, 5)];
@@ -527,17 +564,6 @@ PBesrClose(); %close PBesr
 %set status to 0, implement in the future
 status = 0;
 
-function [signal, reference]=CreateAndSetCounters()
-
-[ status, ~, signal ] = DAQmxCreateTask([]);
-DAQmxErr(status);
-
-[ status, ~, reference(1) ] = DAQmxCreateTask([]);
-DAQmxErr(status);
-
-DAQmxFunctionPool('SetGatedCounter',signal,'Dev2/ctr0','/Dev2/PFI8','/Dev2/PFI9');
-DAQmxFunctionPool('SetGatedCounter',reference(1),'Dev2/ctr1','/Dev2/PFI8','/Dev2/PFI4');
-
 function [status, task] = SetNCounters(varargin)
 %varargin(1) is the number of total samples
 %varargin(2) is the source of gating
@@ -552,7 +578,8 @@ if strcmp(gmSEQ.meas,'SPCM')
     end
     
 elseif strcmp(gmSEQ.meas,'APD')
-    [status, task ] = DAQmxFunctionPool('CreateAIChannel',varargin{3},varargin{2},varargin{4});
+    numCHNtoCreate = 1;
+    [status, task ] = DAQmxFunctionPool('CreateAIChannel',varargin{3},varargin{2},varargin{4}, numCHNtoCreate);
 end
 hCPS.hCounter=task;
 
@@ -629,7 +656,7 @@ if ~isfield(gmSEQ,'bLiO')&&gmSEQ.ctrN~=1 % Do not plot ESR
                 % data=signal(1,:)-signal(3,:)./(signal(2,:)-signal(4,:));
             end
         elseif gmSEQ.ctrN==2
-            if strcmp(gmSEQ.name,'Scan_CounterGate_time')
+            if strcmp(gmSEQ.name,'Scan_CounterGate_time') || strcmp(gmSEQ.name,'f_CtrGateCali')
                 sig = signal(2,:);
                 ref = signal(1,:);
                 data = (ref-sig)./ref.*sqrt(sig);        % contrast / noise in signal
@@ -680,6 +707,34 @@ if ~isfield(gmSEQ,'bLiO')&&gmSEQ.ctrN~=1 % Do not plot ESR
                 sig_B = signal(2,:);
                 sig_D = signal(4,:); 
                 [data, data_err] = ContrastDiff(ref_B, ref_D,sig_B, sig_D, gmSEQ.iAverage);
+            elseif strcmp(gmSEQ.name,'Echo_wDarkRef')
+                ref_B = signal(3,:);
+                ref_D = signal(1,:);
+                sig_B = signal(2,:);
+                sig_D = signal(4,:); 
+                data = (sig_B - sig_D)./(ref_B - ref_D);
+                N =  gmSEQ.iAverage;
+                ref_B_err = 1./sqrt(N * ref_B); % Relative error of bright reference
+                ref_D_err = 1./sqrt(N * ref_D); % Relative error of dark reference
+                sig_B_err = 1./sqrt(N * sig_B); % Relative error of bright signal
+                sig_D_err = 1./sqrt(N * sig_D); % Relative error of dark signal
+                ref_err = sqrt((ref_B_err .* ref_B).^2 + (ref_D_err .* ref_D).^2)./(ref_B + ref_D);
+                sig_err = sqrt((sig_B_err .* sig_B).^2 + (sig_D_err .* sig_D).^2)./(sig_B - sig_D);
+                rel_err = sqrt(ref_err.^2 + sig_err.^2);
+                data_err = rel_err .* data;
+            elseif strcmp(gmSEQ.name,'f_DEER_scan_freq')||strcmp(gmSEQ.name,'f_Echo')||strcmp(gmSEQ.name,'f_DEER_scan_tau')...
+                    ||strcmp(gmSEQ.name,'f_DEER_scan_dur')||strcmp(gmSEQ.name,'f_DEER_scan_power')
+                ref_B = signal(1,:);
+                ref_D = signal(3,:);
+                sig_B = signal(2,:);
+                sig_D = signal(4,:); 
+                [data, data_err] = ContrastDiff2(ref_B, ref_D,sig_B, sig_D, gmSEQ.iAverage);
+            elseif strcmp(gmSEQ.name,'f_XY8')||strcmp(gmSEQ.name,'f_DEER_XY8')
+                ref_B = signal(1,:);
+                sig_D = signal(2,:);
+                ref_D = signal(3,:);
+                sig_B = signal(4,:); 
+                [data, data_err] = ContrastDiff2(ref_B, ref_D,sig_B, sig_D, gmSEQ.iAverage);
             else          
                 ref_B = signal(3,:);
                 ref_D = signal(1,:);
@@ -732,138 +787,16 @@ sig_err = sqrt((sig_B_err .* sig_B).^2 + (sig_D_err .* sig_D).^2)./(sig_B - sig_
 rel_err = sqrt(ref_err.^2 + sig_err.^2);
 data_err = rel_err .* data;
 
-
-function [data, data_err] = ContrastDiff2(ref_B, ref_D, sig_B, sig_D, N)
-data = (sig_B - sig_D) ./ (ref_B + ref_D);
-
-
-function [ValidCMD] = ValidateCMD(CMD,ClockTime)
-% checks the CMD structure for erroneously short instruction delays due to
-% rounding errors in building the pulse sequence via matlab
-a = 1;
-
-for k=1:size(CMD,1)
-    if CMD{k,4} > 1 %1 ns is the minimum time
-        
-        if CMD{k,4} < (1e9*5*ClockTime) % if we find a short delay, we must implement it
-            %warning('Pulse Blaster Sequence specified needs short delays.  This is not yet implemented!');
-            
-            % SHORT DELAY PRIMER
-            % jhodges, 18 July 2008
-            %
-            % By setting bits 21-23 on the pulse blaster we can invoke
-            % delays that are shorter than the minimum instruction time for
-            % a CONTINUE command (5 clock cycles)
-            %
-            % SHORT Delays only work for the 4 BNC lines on the output of
-            % the pulse blaster.  These correspond to PB0 - PB3, or bits
-            % 0 - 3.  You cannot specify which of the 4 BNCs drive high.
-            
-            % Note that the flags should be set such that bits 21-23 are
-            % only set high when the BNCs are in use and should be set to
-            % 000 = 0xE00000 when the lines are not in use
-            %
-            % The following code, which will run in the Spin Core Pulse Interpreter,\
-            % has these possible behaviors:
-            % 0xFFFFFF, 500ns, LOOP, 100000 //start loop
-            % 0x*00000, 100ns //all lines low
-            % 0x600008, 20ns // Bit3 short pulse, 3 clock cycles
-            % 0x000008, 100ns //all lines low again
-            % 0x000000, 100ns, END_LOOP
-            % 0x000000, 100ns
-            % 0x000000, 100ns, STOP
-            %
-            % If *=E, that is setting all bits high, then the instruction
-            % on the third line does not produce only 3 clock cycles on bit
-            % 3, but produces and extra pulse
-            %
-            % If *=0, the pulse program works as expected with a short, 3
-            % cycle pulse on bit3
-            
-            
-            % Short delays should already be CONTINUE commands from the
-            % preceeding logic
-            Delay = CMD{k,4};
-            ClockPeriods = round(Delay/ClockTime/1e9);
-            % find the binary representation of ClockPeriods
-            CPBinary = dec2bin(ClockPeriods,3);
-            CPBinary = CPBinary(length(CPBinary)-2:end);
-            ShortBitFlag = 2^21*str2num(CPBinary(3)) + ...
-                2^22*str2num(CPBinary(2)) + ...
-                2^23*str2num(CPBinary(1));
-            
-            % now we bit-wise or the ShortBitFlags with the original
-            % instruction
-            CMD{k,1} = bitor(CMD{k,1},ShortBitFlag);
-            CMD{k,2} = 'CONTINUE';
-            CMD{k,4} = 6*1e9*ClockTime;
-            CMD{k,5} = ' '; %flag option should be null
-        else
-            CMD{k,5} = 'ON'; % ON sets bits 21-23 high
-        end
-        
-        % Due to a peculiarity in the PB to CMD logic, we can end up
-        % having LONG_DELAY types with only 1 multiplier.  These should be
-        % made into continue delays
-        if strcmp(CMD{k,2},'LONG_DELAY') && CMD{k,3} == 1
-            CMD{k,2} = 'CONTINUE';
-            CMD{k,3} = 0;
-        end
-        
-        % Update the ValidCMD with this CMD
-        for kk=1:size(CMD,2)
-            ValidCMD{a,kk} = CMD{k,kk};
-        end
-        a = a+1;
-    end
-end
-
-function Load_PB_Sequence()
-
-global gmSEQ
-
-ClockTime = 1/500e6;
-
-
-CMD = ValidateCMD(gmSEQ,ClockTime);
-
-
-s = CMD2PBI(CMD);
-Ncmd = size(CMD,1);
-
-PBesrInit(); %initialize PBesr
-
-% sets the clock frequency. for PBESR-PRO-400, it's 400MHz
-% for PBESR-PRO-333, it's 333.3MHz
-PBesrSetClock(500);
-
-PBesrStartProgramming(); % enter the programming mode
-
-% Loop over all commands
-for cmd = 1:Ncmd
-    flag = CMD{cmd,1};
-    flag_option = CMD{cmd,5};
-    inst = char(CMD{cmd,2});
-    inst_arg = CMD{cmd,3};
-    length = CMD{cmd,4};
-    % give the instruction to the PB
-    PBstatus = PBesrInstruction(flag, flag_option, inst, inst_arg, length);
-    if PBstatus < 0
-        warning('Invalid PulseBlaster Instruction (Line %d)\nCMD = [%d]\t[%s]\t[%d]\t[%g]\t[%s]',cmd,flag,inst,inst_arg,length,flag_option);
-    end
-end
-
-% Last command is to stop the outputs
-flag = 0; % set all lines low
-PBesrInstruction(flag, flag_option, 'CONTINUE', 0, 100);
-PBesrInstruction(flag, flag_option, 'STOP', 0, 100);
-
-PBesrStopProgramming(); % exit the programming mode
-
-PBesrClose(); %close PBesr
-%set status to 0, implement in the future
-
-status = 0;
+function [data, data_err] = ContrastDiff2(ref_B, ref_D,sig_B, sig_D, N)
+data = (sig_B - sig_D)./(ref_B - ref_D); %Normalize to 1
+ref_B_err = 1./sqrt(N * ref_B); % Relative error of bright reference
+ref_D_err = 1./sqrt(N * ref_D); % Relative error of dark reference
+sig_B_err = 1./sqrt(N * sig_B); % Relative error of bright signal
+sig_D_err = 1./sqrt(N * sig_D); % Relative error of dark signal
+ref_err = sqrt((ref_B_err .* ref_B).^2 + (ref_D_err .* ref_D).^2)./(ref_B + ref_D);
+sig_err = sqrt((sig_B_err .* sig_B).^2 + (sig_D_err .* sig_D).^2)./(sig_B - sig_D);
+rel_err = sqrt(ref_err.^2 + sig_err.^2);
+data_err = rel_err .* data;
 
 function StartCounters(task)
 DAQmxStartTask(task);
@@ -874,7 +807,8 @@ global gmSEQ
 if strcmp(gmSEQ.meas,'SPCM')
     [status, A]= DAQmxReadCounterU32(task, samps, timeout, zeros(1,samps), samps, libpointer('int32Ptr',0) );
 elseif strcmp(gmSEQ.meas,'APD')
-    [status, A] = DAQmxFunctionPool('ReadAnalogVoltage',task, samps, timeout);
+    numCHNtoRead = 1;
+    [status, A] = DAQmxFunctionPool('ReadAnalogVoltage',task, samps, timeout, numCHNtoRead);
 end
 DAQmxErr(status);
 
@@ -906,7 +840,6 @@ if strcmp(gmSEQ.meas,'SPCM')
 end
 NN=length(vec);
 
-% Upgrading this function...
 function sigDatum = ProcessData(RawData)
 global gmSEQ gSG
 if strcmp(gmSEQ.meas,'SPCM')
@@ -1036,7 +969,8 @@ if gmSEQ.bTrack
     end
 end
 
-if gmSEQ.bCali
+if 0
+%if gmSEQ.bCali
     gCaliCounter.RFCali = gCaliCounter.RFCali + 1;
     if (mod(gCaliCounter.RFCali, gmSEQ.CaliN)==1) || (gmSEQ.CaliN == 1)
         if strcmp(gmSEQ.name, 'Special Cooling')
@@ -1044,7 +978,6 @@ if gmSEQ.bCali
         end
     end
 end
-
 
 function AutoCalibration(hObject, eventdata, handles)
 global gmSEQ gSG gSG2 gSaveDataAve gCaliLog
@@ -1194,3 +1127,12 @@ for f = 1:size(A,1)
 end
 ImgN = ImgN + 1;
 gSaveDataAve.file = strrep(file,'.txt',sprintf('_%03d.txt',ImgN));
+
+function Set_FPGA_GUI_buttons(handles, is_enable)
+handles.fpga_get_waveform_lsit.Enable = is_enable;
+handles.fpga_get_program_list.Enable = is_enable;
+handles.fpga_get_envelope_list.Enable = is_enable;
+handles.fpga_get_state.Enable = is_enable;
+handles.fpga_get_connect.Enable = is_enable;
+handles.fpga_get_disconnect.Enable = is_enable;
+

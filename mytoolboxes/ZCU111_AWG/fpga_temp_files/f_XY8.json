@@ -1,0 +1,1 @@
+{"name":"f_XY8","prog_structure":{"ch7":"[+Xhalf,loop(200,[0,+X,0,+Y,0,+X,0,+Y,0,+Y,0,+X,0,+Y,0,+X,0]),+Xhalf,22308,+X,22308,+Xhalf,loop(200,[0,+X,0,+Y,0,+X,0,+Y,0,+Y,0,+X,0,+Y,0,+X,0]),-Xhalf]"}}

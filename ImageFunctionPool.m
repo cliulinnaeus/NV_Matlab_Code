@@ -82,6 +82,8 @@ switch what
         WriteVoltage(varargin{1},varargin{2});
     case 'UpdateVoltage'
         UpdateVoltage1(hObject, eventdata, handles);
+    case 'attoAutoScan'
+        attoAutoScan(hObject, eventdata, handles);
     otherwise
 end
 
@@ -360,7 +362,7 @@ disp('Image correlation tracking starts!')
 % gImageCorr.RefIMG = 'C:\MATLAB_Code\ImageCorrelation\Image_2022-2-22_Img011.txt'; % S011
 % gImageCorr.RefIMG = 'C:\MATLAB_Code\ImageCorrelation\Image_2021-11-23_Img021.txt'; % Update for L026 11/23/2021
 % gImageCorr.RefIMG = 'C:\MATLAB_Code\ImageCorrelation\Image_2021-8-10_Img004.txt';
-gImageCorr.RefIMG = 'C:\MATLAB_Code\ImageCorrelation\Image_2024-9-30_Img016.txt';
+gImageCorr.RefIMG = 'C:\MATLAB_Code\ImageCorrelation\Image_2024-10-1_Img029.txt';
 
 [IMG_ref, Info_ref]=ReadImageFile_ImgCorr(gImageCorr.RefIMG);
 gImageCorr.RefVx = IMG_ref.FixVx;
@@ -618,8 +620,6 @@ else
     gScan.yLineHandle = line(handles.axes1, [p.x p.x],[YLimits(1),YLimits(2)],[1,1]);
 end
 
-
-
 function PredefinedScans(what,hObject,eventdata,handles)
 
 switch what
@@ -650,11 +650,10 @@ switch what
         set(handles.FixDT,'String',0.001);
 end
 
-
 function Track(hObject,eventdata,handles)
 global gScan gConfocal gTracking;
 
-%% added new functionality for Track Continuously checkbox
+%added new functionality for Track Continuously checkbox
 TrackCenter(1);
 bTrackContinuously = get(handles.cbTrackCont,'Value');
 while bTrackContinuously,
@@ -673,7 +672,6 @@ set(handles.FixVx,'String',gScan.FixVx);
 set(handles.FixVy,'String',gScan.FixVy);
 set(handles.FixVz,'String',gScan.FixVz);
 
-
 function ApplyOffSet(hObject, eventdata, handles)
 global gConfocal;
 
@@ -690,7 +688,6 @@ fid = fopen([gConfocal.path gConfocal.filename],'wt');
 fprintf(fid,'XOffSet= %f\n',gConfocal.XOffSet);
 fprintf(fid,'YOffSet= %f',gConfocal.YOffSet);
 fclose(fid);
-
 
 function ImageStart(hObject, eventdata, handles)
 global gScan gSaveImg;
@@ -709,8 +706,8 @@ gConfocal.positionfile='CurrentNV_Position.txt';
 gConfocal.V_per_um='V_per_um.txt';
 ReadStartingFile(handles);
 
-%% Load PI MATLAB Driver GCS2 (Piezo) added by Weijie 09/21/2021
-piezoPFM450FunctionPool('connect');
+%%Load PI MATLAB Driver GCS2 (Piezo) added by Weijie 09/21/2021
+%piezoPFM450FunctionPool('connect');
 
 
 % gPiezo.axis = '1';
@@ -762,31 +759,6 @@ set(handles.XOffSet,'String',gConfocal.XOffSet);
 set(handles.YOffSet,'String',gConfocal.YOffSet);
 gmSEQ.meas=PortMap('meas');
 gmSEQ.meas2=PortMap('meas2');
-
-% %AWG Initialize of AWG
-% % 1st AWG is for MW control
-% chaseFunctionPool('loadChase')
-% pause(0.5)
-% chaseFunctionPool('Initialize', 1)
-% pause(0.5)
-% chaseFunctionPool('ExtClk10MHzChase', 1, 1)
-% pause(0.5)
-% gSG.AWGClockRate = 2; % in GHz. Yuanqi
-% chaseFunctionPool('setClkRate', 1, gSG.AWGClockRate * 1e9)
-% pause(0.5)
-%
-% % 2nd AWG is for AOM laser control
-% chaseFunctionPool('Initialize', 2)
-% pause(0.5)
-% chaseFunctionPool('ExtClk10MHzChase', 2, 1)
-% pause(0.5)
-% gmSEQ.LaserAWGClockRate = 0.1; % in GHz. Yuanqi
-% chaseFunctionPool('setClkRate', 2, gmSEQ.LaserAWGClockRate * 1e9)
-% pause(0.5)
-
-% UpdateVoltage1(hObject, eventdata, handles);
-
-
 
 
 function UpdateVoltage1(hObject, eventdata, handles)
@@ -936,7 +908,7 @@ end
 ImageFillUpForm('UpdateScan', hObject, eventdata, handles);
 
 function TrackZ(hObject, eventdata, handles)
-%% modified to be used with Thorlabs piezo PFM450 (CL - 9/24/24)
+%%modified to be used with Thorlabs piezo PFM450 (CL - 9/24/24)
 
 global gScan gbManChange gConfocal hCPS
 minLz = eval(get(handles.minVz,'String'));
@@ -960,7 +932,7 @@ WriteVoltage(PortMap('Galvo y'),gScan.FixVy + gConfocal.YOffSet);
 % returns position in um
 z0 = piezoPFM450FunctionPool('getposition');
 % TODO
-fprintf('Current Z = %s\n', z0);
+%fprintf('Current Z = %s\n', z0);
 %disp(['Current Z =' z0 'µm'])
 %get current z
 %z_current = 
@@ -1302,6 +1274,10 @@ function PrepareAxes(Scan, hObject, eventdata, handles)
 axes(handles.axes1);
 xlim([Scan.minVx Scan.maxVx]);
 ylim([Scan.minVy Scan.maxVy]);
+
+
+
+
 
 function MakeScan(Scan,hObject, eventdata, handles)
 global hTasks bGo gScan gConfocal gmSEQ;
@@ -1655,7 +1631,8 @@ global gmSEQ
 if strcmp(gmSEQ.meas,'SPCM')
     [status, readArray]= DAQmxReadCounterU32(task, numSampsPerChan, timeout, zeros(1,numSampsPerChan), numSampsPerChan, libpointer('int32Ptr',0) );
 elseif strcmp(gmSEQ.meas,'APD')
-    [status, readArray] = DAQmxFunctionPool('ReadAnalogVoltage',task, numSampsPerChan, timeout);
+    numCHNtoRead = 1;
+    [status, readArray] = DAQmxFunctionPool('ReadAnalogVoltage',task, numSampsPerChan, timeout, numCHNtoRead);
 end
 DAQmxErr(status);
 
@@ -1695,7 +1672,8 @@ global gmSEQ
 if strcmp(gmSEQ.meas,'SPCM')
     [status, task ] = DAQmxFunctionPool('SetCounter',varargin{1});
 elseif strcmp(gmSEQ.meas,'APD')
-    [status, task ] = DAQmxFunctionPool('CreateAIChannel',PortMap('Ctr Trig'),varargin{1},varargin{2});
+    numCHNtoCreate = 1;
+    [status, task ] = DAQmxFunctionPool('CreateAIChannel',PortMap('Ctr Trig'),varargin{1},varargin{2}, numCHNtoCreate);
     
 end
 DAQmxErr(status);
@@ -1895,7 +1873,12 @@ switch what
         Device = PortMap('Galvo x');
     case {2,PortMap('Galvo y')}
         Device = PortMap('Galvo y');
-    case {3,'Obj_Piezo'}        
+    case {3,'Obj_Piezo'}
+        %%% Haopu added on 11/20/2024 since we want to manually control Z
+        disp('Z is controlled manually')
+        return
+        %%%
+        
         if Voltage > gPiezo.maxposition
             Voltage = gPiezo.maxposition;
         end
@@ -1904,11 +1887,13 @@ switch what
         end
 %         % for piezo in closed loop config, voltage is actually 
 %         % a position value in um
+
+        if 0
         piezoPFM450FunctionPool('setposition', Voltage);
         pause(1);
         pos = piezoPFM450FunctionPool('getposition');
         fprintf('Current Z position: %s\n', pos);
-        
+        end
         %         % #EO
         %         if Voltage > gPiezo.maximumPosition
         %             Voltage = gPiezo.maximumPosition;
@@ -3101,7 +3086,7 @@ function varargout = dsxy2figxy(varargin)
 %   har = annotation('textarrow',figx,figy);
 %   set(har,'String',['(' num2str(axx(2)) ',' num2str(axy(2)) ')'])
 
-%% Obtain arguments (only limited argument checking is performed).
+%%Obtain arguments (only limited argument checking is performed).
 % Determine if axes handle is specified
 if length(varargin{1})== 1 && ishandle(varargin{1}) && ...
         strcmp(get(varargin{1},'type'),'axes')
@@ -3116,14 +3101,14 @@ if length(varargin)==1	% Must be a 4-element POS vector
 else
     [x,y] = deal(varargin{:});  % Two tuples (start & end points)
 end
-%% Get limits
+%%Get limits
 axun = get(hAx,'Units');
 set(hAx,'Units','normalized');  % Need normaized units to do the xform
 axpos = get(hAx,'Position');
 axlim = axis(hAx);              % Get the axis limits [xlim ylim (zlim)]
 axwidth = diff(axlim(1:2));
 axheight = diff(axlim(3:4));
-%% Transform data from figure space to data space
+%%Transform data from figure space to data space
 if exist('x','var')     % Transform a and return pair of points
     varargout{1} = (x-axlim(1))*axpos(3)/axwidth + axpos(1);
     varargout{2} = (y-axlim(3))*axpos(4)/axheight + axpos(2);
@@ -3134,7 +3119,7 @@ else                    % Transform and return a position rectangle
     pos(4) = pos(4)*axpos(4)/axheight;
     varargout{1} = pos;
 end
-%% Restore axes units
+%%Restore axes units
 set(hAx,'Units',axun)
 
 
